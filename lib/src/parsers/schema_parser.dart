@@ -6,7 +6,7 @@ class SchemaParser {
   /// Builds a FormGroup from the given JSON Schema.
   /// - Each property in the schema becomes a typed FormControl based on `type`.
   /// - Initial value is `null` for now.
-  static FormGroup buildFormGroup(JsonMap schema) {
+  static FormGroup buildFormGroup(JsonMap schema, {JsonMap? formData}) {
     final rawProps = schema['properties'];
 
     // Ensure properties exist and are valid
@@ -21,26 +21,47 @@ class SchemaParser {
       final name = entry.key;
       final propSchema = _asMap(entry.value);
 
-      controls[name] = _buildTypedControl(propSchema);
+      final initialValue = _resolveInitialValue(
+        name,
+        propSchema,
+        formData,
+      );
+
+      controls[name] = _buildTypedControl(propSchema, initialValue);
     }
 
     return FormGroup(controls);
   }
 
-  /// Creates a typed FormControl based on the JSON Schema `type`.
-  static AbstractControl _buildTypedControl(JsonMap propSchema) {
+  /// Picks value from formData > schema.default > null
+  static dynamic _resolveInitialValue(
+    String name,
+    JsonMap propSchema,
+    JsonMap? formData,
+  ) {
+    if (formData != null && formData.containsKey(name)) {
+      return formData[name];
+    }
+    if (propSchema.containsKey('default')) {
+      return propSchema['default'];
+    }
+    return null;
+  }
+
+  /// Create a typed FormControl based on the JSON Schema `type`.
+  static AbstractControl _buildTypedControl(JsonMap propSchema, dynamic value) {
     final type = (propSchema['type'] as String?)?.toLowerCase();
 
     switch (type) {
       case 'string':
-        return FormControl<String>(value: null);
+        return FormControl<String>(value: value as String?);
       case 'integer':
-        return FormControl<int>(value: null);
+        return FormControl<int>(value: value is int ? value : null);
       case 'number':
-        // JSON Schema `number` → mapped to double
-        return FormControl<double>(value: null);
+        return FormControl<double>(
+            value: value is num ? value.toDouble() : null);
       case 'boolean':
-        return FormControl<bool>(value: null);
+        return FormControl<bool>(value: value is bool ? value : null);
       case 'object':
         // Placeholder: nested objects will be another FormGroup (empty for now)
         return FormGroup({});
@@ -48,8 +69,7 @@ class SchemaParser {
         // Placeholder: arrays will be FormArray (empty for now)
         return FormArray([]);
       default:
-        // If no `type` is provided → fallback to string
-        return FormControl<String>(value: null);
+        return FormControl<String>(value: value?.toString());
     }
   }
 
