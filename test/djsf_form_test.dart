@@ -51,4 +51,35 @@ void main() {
       expect(find.text("DJSF Form Placeholder"), findsOneWidget);
     });
   });
+
+  group('DjsfForm description rendering', () {
+    testWidgets('shows description when present', (WidgetTester tester) async {
+      final schema = {"description": "Register users", "properties": {}};
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DjsfForm(schema: schema),
+          ),
+        ),
+      );
+
+      expect(find.text('Register users'), findsOneWidget);
+    });
+
+    testWidgets('does not show description when missing',
+        (WidgetTester tester) async {
+      final schema = {"title": "A registration form", "properties": {}};
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DjsfForm(schema: schema),
+          ),
+        ),
+      );
+
+      expect(find.text('Register users'), findsNothing);
+    });
+  });
 }

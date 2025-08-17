@@ -1,6 +1,8 @@
-import 'package:flutter/widgets.dart';
+import 'package:dart_json_schema_form/src/parsers/schema_parser.dart';
+import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
-typedef JsonMap = Map<String, dynamic>;
+import 'types/types.dart';
 
 /// DJSF (Dart JSON Schema Form)
 /// Entry point of the library.
@@ -29,7 +31,22 @@ class DjsfForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = schema['title'] ?? 'DJSF Form Placeholder';
-    return Text(title.toString());
+    final String title = schema['title'] ?? 'DJSF Form Placeholder';
+    final String? description = schema['description'];
+    return ReactiveFormBuilder(
+      form: () => SchemaParser.buildFormGroup(schema),
+      builder: (context, form, child) {
+        return Column(
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Divider(),
+            if (description != null) Text(description),
+          ],
+        );
+      },
+    );
   }
 }
