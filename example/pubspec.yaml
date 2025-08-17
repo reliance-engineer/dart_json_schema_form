@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   dart_json_schema_form:
     path: ../
+  reactive_forms: ^18.1.1
 
 
 dev_dependencies:
