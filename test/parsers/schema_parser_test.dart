@@ -62,4 +62,52 @@ void main() {
     // Default fallback → string
     expect(form.control('unspecified'), isA<FormControl<String>>());
   });
+
+  group('SchemaParser default values', () {
+    test('uses default value from schema if no initialData is provided', () {
+      final schema = {
+        "type": "object",
+        "properties": {
+          "firstName": {"type": "string", "default": "Chuck"},
+          "age": {"type": "integer", "default": 42},
+          "active": {"type": "boolean", "default": true}
+        }
+      };
+
+      final form = SchemaParser.buildFormGroup(schema);
+
+      expect(form.control('firstName').value, 'Chuck');
+      expect(form.control('age').value, 42);
+      expect(form.control('active').value, true);
+    });
+
+    test('uses initialData instead of schema default', () {
+      final schema = {
+        "type": "object",
+        "properties": {
+          "firstName": {"type": "string", "default": "Chuck"},
+        }
+      };
+
+      final form = SchemaParser.buildFormGroup(
+        schema,
+        formData: {"firstName": "Bruce"},
+      );
+
+      expect(form.control('firstName').value, 'Bruce');
+    });
+
+    test('falls back to null if neither default nor initialData', () {
+      final schema = {
+        "type": "object",
+        "properties": {
+          "nickname": {"type": "string"},
+        }
+      };
+
+      final form = SchemaParser.buildFormGroup(schema);
+
+      expect(form.control('nickname').value, isNull);
+    });
+  });
 }

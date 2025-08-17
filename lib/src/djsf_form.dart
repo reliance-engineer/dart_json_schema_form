@@ -14,13 +14,13 @@ class DjsfForm extends StatelessWidget {
     super.key,
     required this.schema,
     this.uiSchema,
-    this.initialData,
+    this.formData,
     this.onChanged,
   });
 
   final JsonMap schema;
   final JsonMap? uiSchema;
-  final JsonMap? initialData;
+  final JsonMap? formData;
   final ValueChanged<JsonMap>? onChanged;
 
   @override
@@ -29,7 +29,7 @@ class DjsfForm extends StatelessWidget {
     final String? description = schema['description'];
 
     return ReactiveFormBuilder(
-      form: () => SchemaParser.buildFormGroup(schema),
+      form: () => SchemaParser.buildFormGroup(schema, formData: formData),
       builder: (context, form, child) {
         return SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),

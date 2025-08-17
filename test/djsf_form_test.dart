@@ -138,5 +138,91 @@ void main() {
       expect(
           find.widgetWithText(ReactiveTextField<int>, "Age"), findsOneWidget);
     });
+
+    testWidgets('applies default value from schema to string field',
+        (tester) async {
+      final schema = {
+        "title": "Test form",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "title": "First name",
+            "default": "Chuck"
+          }
+        }
+      };
+
+      await tester.pumpWidget(
+        MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
+      );
+
+      // The text "Chuck" should appear as the field's initial value
+      expect(find.text('Chuck'), findsOneWidget);
+    });
+
+    testWidgets('applies default value from schema to integer field',
+        (tester) async {
+      final schema = {
+        "title": "Test form",
+        "properties": {
+          "age": {"type": "integer", "title": "Age", "default": 42}
+        }
+      };
+
+      await tester.pumpWidget(
+        MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
+      );
+
+      // Integer defaults are rendered as text in the input
+      expect(find.text('42'), findsOneWidget);
+    });
+
+    testWidgets('formData overrides schema default (string)', (tester) async {
+      final schema = {
+        "title": "Test form",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "title": "First name",
+            "default": "Chuck"
+          }
+        }
+      };
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DjsfForm(
+              schema: schema,
+              formData: {"firstName": "Bruce"},
+            ),
+          ),
+        ),
+      );
+
+      // Should show the override, not the default
+      expect(find.text('Bruce'), findsOneWidget);
+      expect(find.text('Chuck'), findsNothing);
+    });
+
+    testWidgets('falls back to empty when no default and no formData',
+        (tester) async {
+      final schema = {
+        "title": "Test form",
+        "properties": {
+          "nickname": {"type": "string", "title": "Nickname"}
+        }
+      };
+
+      await tester.pumpWidget(
+        MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
+      );
+
+      // No default or formData → no prefilled text (label still exists, but no value)
+      expect(find.text('Nickname'), findsOneWidget);
+      // Ensure there's no stray value shown
+      expect(find.text('Chuck'), findsNothing);
+      expect(find.text('Bruce'), findsNothing);
+    });
   });
 }
