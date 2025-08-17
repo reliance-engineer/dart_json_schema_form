@@ -1,31 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:dart_json_schema_form/dart_json_schema_form.dart';
+import 'examples/very_simple_form_example.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static const _appTitle = 'DJSF Examples';
+
   @override
   Widget build(BuildContext context) {
-    final schema = {
-      "title": "A registration form",
-      "type": "object",
-      "properties": {
-        "firstName": {"type": "string"},
-      },
-    };
-    final uiSchema = {
-      "firstName": {"ui:autofocus": true},
-    };
-
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('DJSF Example')),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: DjsfForm(schema: schema, uiSchema: uiSchema),
-        ),
+      title: _appTitle,
+      theme: ThemeData(useMaterial3: true),
+      home: const _HomePage(title: _appTitle),
+      routes: {
+        VerySimpleFormExample.route: (_) => const VerySimpleFormExample(),
+      },
+    );
+  }
+}
+
+class _HomePage extends StatelessWidget {
+  const _HomePage({required this.title});
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: ListView(
+        padding: const EdgeInsets.all(12),
+        children: [
+          // Botón de navegación a tu ejemplo
+          ListTile(
+            title: const Text('Very simple form'),
+            subtitle: const Text('Minimal example with title & description'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap:
+                () => Navigator.of(
+                  context,
+                ).pushNamed(VerySimpleFormExample.route),
+          ),
+          const Divider(),
+          // Here will come more examples.
+        ],
       ),
     );
   }
