@@ -1,6 +1,5 @@
 import 'package:dart_json_schema_form/src/parsers/schema_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 void main() {
   test('SchemaParser creates a FormGroup with all properties as FormControls',
