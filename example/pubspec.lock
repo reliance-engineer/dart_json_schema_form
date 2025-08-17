@@ -160,7 +160,7 @@ packages:
     source: hosted
     version: "1.9.1"
   reactive_forms:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: reactive_forms
       sha256: "4c8fe71f21ac88996c01a56fe19ea5ec39b47292cb07f99a467e1bb977136a98"

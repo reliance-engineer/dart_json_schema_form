@@ -1,4 +1,5 @@
 import 'package:dart_json_schema_form/src/parsers/schema_parser.dart';
+import 'package:dart_json_schema_form/src/renderers/form_renderer.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -17,34 +18,46 @@ class DjsfForm extends StatelessWidget {
     this.onChanged,
   });
 
-  /// JSON Schema following RJSF specification.
   final JsonMap schema;
-
-  /// Optional UI Schema (RJSF).
   final JsonMap? uiSchema;
-
-  /// Optional initial form values.
   final JsonMap? initialData;
-
-  /// Optional callback to notify when form data changes.
   final ValueChanged<JsonMap>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     final String title = schema['title'] ?? 'DJSF Form Placeholder';
     final String? description = schema['description'];
+
     return ReactiveFormBuilder(
       form: () => SchemaParser.buildFormGroup(schema),
       builder: (context, form, child) {
-        return Column(
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Divider(),
-            if (description != null) Text(description),
-          ],
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const Divider(),
+              if (description != null) Text(description),
+              const SizedBox(height: 16),
+              FormRenderer(form: form, schema: schema),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  if (form.valid) {
+                    debugPrint('Form value: ${form.value}');
+                  } else {
+                    form.markAllAsTouched();
+                  }
+                },
+                child: const Text('Submit'),
+              ),
+            ],
+          ),
         );
       },
     );
