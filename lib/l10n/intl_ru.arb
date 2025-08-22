@@ -1,0 +1,15 @@
+{
+  "@@locale": "ru",
+  "required": "Это поле обязательно для заполнения",
+  "minLength": "Длина должна быть не менее {limit} символов",
+  "@minLength": {"placeholders": {"limit": {}}},
+  "maxLength": "Длина должна быть не более {limit} символов",
+  "@maxLength": {"placeholders": {"limit": {}}},
+  "pattern": "Недопустимый формат",
+  "min": "Значение должно быть ≥ {limit}",
+  "@min": {"placeholders": {"limit": {}}},
+  "max": "Значение должно быть ≤ {limit}",
+  "@max": {"placeholders": {"limit": {}}},
+  "equals": "Значение должно быть равно {allowed}",
+  "@equals": {"placeholders": {"allowed": {}}}
+}

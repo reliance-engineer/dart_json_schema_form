@@ -1,0 +1,15 @@
+{
+  "@@locale": "nl",
+  "required": "Dit veld is verplicht",
+  "minLength": "Moet minstens {limit} tekens bevatten",
+  "@minLength": {"placeholders": {"limit": {}}},
+  "maxLength": "Mag maximaal {limit} tekens bevatten",
+  "@maxLength": {"placeholders": {"limit": {}}},
+  "pattern": "Ongeldig formaat",
+  "min": "Moet ≥ {limit} zijn",
+  "@min": {"placeholders": {"limit": {}}},
+  "max": "Moet ≤ {limit} zijn",
+  "@max": {"placeholders": {"limit": {}}},
+  "equals": "Moet gelijk zijn aan {allowed}",
+  "@equals": {"placeholders": {"allowed": {}}}
+}

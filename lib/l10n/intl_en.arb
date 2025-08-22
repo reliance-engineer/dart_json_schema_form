@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "required": "This field is required",
+  "minLength": "Must be at least {limit} characters",
+  "@minLength": {"placeholders": {"limit": {}}},
+  "maxLength": "Must be at most {limit} characters",
+  "@maxLength": {"placeholders": {"limit": {}}},
+  "pattern": "Invalid format",
+  "min": "Must be ≥ {limit}",
+  "@min": {"placeholders": {"limit": {}}},
+  "max": "Must be ≤ {limit}",
+  "@max": {"placeholders": {"limit": {}}},
+  "equals": "Must equal {allowed}",
+  "@equals": {"placeholders": {"allowed": {}}}
+}

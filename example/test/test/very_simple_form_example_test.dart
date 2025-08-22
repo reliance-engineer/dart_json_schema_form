@@ -9,6 +9,8 @@ void main() {
     (tester) async {
       await tester.pumpWidget(const MaterialApp(home: VerySimpleFormExample()));
 
+      await tester.pumpAndSettle();
+
       // App bar title
       expect(find.text('DJSF Very Simple Example'), findsOneWidget);
 
