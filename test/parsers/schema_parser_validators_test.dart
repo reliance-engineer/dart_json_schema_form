@@ -9,8 +9,8 @@ void main() {
         "type": "object",
         "required": ["firstName"],
         "properties": {
-          "firstName": {"type": "string", "title": "First name"}
-        }
+          "firstName": {"type": "string", "title": "First name"},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -27,8 +27,8 @@ void main() {
       final schema = {
         "type": "object",
         "properties": {
-          "password": {"type": "string", "minLength": 3}
-        }
+          "password": {"type": "string", "minLength": 3},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -46,8 +46,8 @@ void main() {
       final schema = {
         "type": "object",
         "properties": {
-          "code": {"type": "string", "maxLength": 5}
-        }
+          "code": {"type": "string", "maxLength": 5},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -70,8 +70,8 @@ void main() {
             "type": "string",
             "minLength": 3,
             "maxLength": 8,
-          }
-        }
+          },
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -96,8 +96,8 @@ void main() {
       final schema = {
         "type": "object",
         "properties": {
-          "code": {"type": "string", "const": "XYZ"}
-        }
+          "code": {"type": "string", "const": "XYZ"},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -114,8 +114,8 @@ void main() {
       final schema = {
         "type": "object",
         "properties": {
-          "email": {"type": "string", "pattern": r"^[^\s@]+@[^\s@]+\.[^\s@]+$"}
-        }
+          "email": {"type": "string", "pattern": r"^[^\s@]+@[^\s@]+\.[^\s@]+$"},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -132,8 +132,8 @@ void main() {
       final schema = {
         "type": "object",
         "properties": {
-          "age": {"type": "integer", "minimum": 18, "maximum": 65}
-        }
+          "age": {"type": "integer", "minimum": 18, "maximum": 65},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -153,8 +153,8 @@ void main() {
       final schema = {
         "type": "object",
         "properties": {
-          "rating": {"type": "number", "minimum": 1.5, "maximum": 4.5}
-        }
+          "rating": {"type": "number", "minimum": 1.5, "maximum": 4.5},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -175,8 +175,8 @@ void main() {
         "type": "object",
         "required": ["terms"],
         "properties": {
-          "terms": {"type": "boolean"}
-        }
+          "terms": {"type": "boolean"},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);

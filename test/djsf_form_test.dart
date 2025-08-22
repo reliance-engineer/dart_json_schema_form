@@ -12,8 +12,8 @@ void main() {
         "title": "A registration form",
         "type": "object",
         "properties": {
-          "firstName": {"type": "string"}
-        }
+          "firstName": {"type": "string"},
+        },
       };
 
       // Act
@@ -37,8 +37,8 @@ void main() {
       final schema = {
         "type": "object",
         "properties": {
-          "firstName": {"type": "string"}
-        }
+          "firstName": {"type": "string"},
+        },
       };
 
       // Act
@@ -97,26 +97,8 @@ void main() {
       final schema = {
         "title": "Test form",
         "properties": {
-          "username": {"type": "string", "title": "Username"}
-        }
-      };
-
-      await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(find.widgetWithText(ReactiveTextField<String>, "Username"),
-          findsOneWidget);
-    });
-
-    testWidgets('renders integer field from schema', (tester) async {
-      final schema = {
-        "title": "Test form",
-        "properties": {
-          "age": {"type": "integer", "title": "Age"}
-        }
+          "username": {"type": "string", "title": "Username"},
+        },
       };
 
       await tester.pumpWidget(
@@ -126,7 +108,29 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-          find.widgetWithText(ReactiveTextField<int>, "Age"), findsOneWidget);
+        find.widgetWithText(ReactiveTextField<String>, "Username"),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('renders integer field from schema', (tester) async {
+      final schema = {
+        "title": "Test form",
+        "properties": {
+          "age": {"type": "integer", "title": "Age"},
+        },
+      };
+
+      await tester.pumpWidget(
+        MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(
+        find.widgetWithText(ReactiveTextField<int>, "Age"),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders multiple fields from schema', (tester) async {
@@ -136,7 +140,7 @@ void main() {
           "firstName": {"type": "string", "title": "First name"},
           "lastName": {"type": "string", "title": "Last name"},
           "age": {"type": "integer", "title": "Age"},
-        }
+        },
       };
 
       await tester.pumpWidget(
@@ -145,12 +149,18 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(ReactiveTextField<String>, "First name"),
-          findsOneWidget);
-      expect(find.widgetWithText(ReactiveTextField<String>, "Last name"),
-          findsOneWidget);
       expect(
-          find.widgetWithText(ReactiveTextField<int>, "Age"), findsOneWidget);
+        find.widgetWithText(ReactiveTextField<String>, "First name"),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(ReactiveTextField<String>, "Last name"),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(ReactiveTextField<int>, "Age"),
+        findsOneWidget,
+      );
     });
 
     testWidgets('applies default value from schema to string field',
@@ -161,9 +171,9 @@ void main() {
           "firstName": {
             "type": "string",
             "title": "First name",
-            "default": "Chuck"
-          }
-        }
+            "default": "Chuck",
+          },
+        },
       };
 
       await tester.pumpWidget(
@@ -181,8 +191,8 @@ void main() {
       final schema = {
         "title": "Test form",
         "properties": {
-          "age": {"type": "integer", "title": "Age", "default": 42}
-        }
+          "age": {"type": "integer", "title": "Age", "default": 42},
+        },
       };
 
       await tester.pumpWidget(
@@ -202,9 +212,9 @@ void main() {
           "firstName": {
             "type": "string",
             "title": "First name",
-            "default": "Chuck"
-          }
-        }
+            "default": "Chuck",
+          },
+        },
       };
 
       await tester.pumpWidget(
@@ -230,8 +240,8 @@ void main() {
       final schema = {
         "title": "Test form",
         "properties": {
-          "nickname": {"type": "string", "title": "Nickname"}
-        }
+          "nickname": {"type": "string", "title": "Nickname"},
+        },
       };
 
       await tester.pumpWidget(

@@ -1,4 +1,4 @@
-import 'djsf_error.dart';
+import 'package:dart_json_schema_form/src/types/djsf_error.dart';
 
 typedef JsonMap = Map<String, dynamic>;
 

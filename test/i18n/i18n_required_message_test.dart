@@ -11,8 +11,8 @@ Widget _app(Locale locale) {
     "title": "Form",
     "required": ["username"],
     "properties": {
-      "username": {"type": "string", "title": "Username", "minLength": 5}
-    }
+      "username": {"type": "string", "title": "Username", "minLength": 5},
+    },
   };
 
   return MaterialApp(
