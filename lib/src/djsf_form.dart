@@ -2,7 +2,6 @@ import 'package:dart_json_schema_form/src/parsers/schema_parser.dart';
 import 'package:dart_json_schema_form/src/renderers/form_renderer.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
 import 'types/types.dart';
 
 /// DJSF (Dart JSON Schema Form)
@@ -16,12 +15,16 @@ class DjsfForm extends StatelessWidget {
     this.uiSchema,
     this.formData,
     this.onChanged,
+    this.transformErrors, // RJSF-style hook
   });
 
   final JsonMap schema;
   final JsonMap? uiSchema;
   final JsonMap? formData;
   final ValueChanged<JsonMap>? onChanged;
+
+  /// RJSF-style transformErrors hook
+  final TransformErrors? transformErrors;
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +35,21 @@ class DjsfForm extends StatelessWidget {
       form: () => SchemaParser.buildFormGroup(schema, formData: formData),
       builder: (context, form, child) {
         return SingleChildScrollView(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
+              Text(title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18)),
               const Divider(),
               if (description != null) Text(description),
               const SizedBox(height: 16),
-              FormRenderer(form: form, schema: schema),
+              FormRenderer(
+                form: form,
+                schema: schema,
+                transformErrors: transformErrors, // pass through
+              ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {

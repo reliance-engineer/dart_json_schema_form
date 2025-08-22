@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'examples/validation_messages_example.dart';
 import 'examples/very_simple_form_example.dart';
 
 void main() {
@@ -18,6 +19,8 @@ class MyApp extends StatelessWidget {
       home: const _HomePage(title: _appTitle),
       routes: {
         VerySimpleFormExample.route: (_) => const VerySimpleFormExample(),
+        ValidationMessagesExample.route:
+            (_) => const ValidationMessagesExample(),
       },
     );
   }
@@ -43,6 +46,16 @@ class _HomePage extends StatelessWidget {
                 () => Navigator.of(
                   context,
                 ).pushNamed(VerySimpleFormExample.route),
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text('Validation messages'),
+            subtitle: const Text('Form validation with custom messages'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap:
+                () => Navigator.of(
+                  context,
+                ).pushNamed(ValidationMessagesExample.route),
           ),
           const Divider(),
           // Here will come more examples.
