@@ -163,6 +163,3 @@ DjsfForm(
 
 ✅ With these options, you can render dynamic forms with validators, customize or translate messages, and integrate seamlessly into your Flutter app.
 
----
-
-👉 Do you want me to also add a **screenshot/GIF** of the example form running, so readers instantly see what it looks like?
