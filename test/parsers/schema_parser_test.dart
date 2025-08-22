@@ -11,7 +11,7 @@ void main() {
         "firstName": {"type": "string"},
         "age": {"type": "integer"},
         "bio": {"type": "string"},
-      }
+      },
     };
 
     final form = SchemaParser.buildFormGroup(schema);
@@ -46,8 +46,8 @@ void main() {
         "isActive": {"type": "boolean"},
         "prefs": {"type": "object"},
         "items": {"type": "array"},
-        "unspecified": {}
-      }
+        "unspecified": {},
+      },
     };
 
     final form = SchemaParser.buildFormGroup(schema);
@@ -70,8 +70,8 @@ void main() {
         "properties": {
           "firstName": {"type": "string", "default": "Chuck"},
           "age": {"type": "integer", "default": 42},
-          "active": {"type": "boolean", "default": true}
-        }
+          "active": {"type": "boolean", "default": true},
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);
@@ -86,7 +86,7 @@ void main() {
         "type": "object",
         "properties": {
           "firstName": {"type": "string", "default": "Chuck"},
-        }
+        },
       };
 
       final form = SchemaParser.buildFormGroup(
@@ -102,7 +102,7 @@ void main() {
         "type": "object",
         "properties": {
           "nickname": {"type": "string"},
-        }
+        },
       };
 
       final form = SchemaParser.buildFormGroup(schema);

@@ -1,16 +1,15 @@
 import 'package:dart_json_schema_form/src/i18n/bundles.dart';
+import 'package:dart_json_schema_form/src/types/djsf_error.dart';
+import 'package:dart_json_schema_form/src/types/types.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-import '../types/djsf_error.dart';
-import '../types/types.dart';
 
 /// FormRenderer renders a list of form fields based on the schema and FormGroup.
 class FormRenderer extends StatelessWidget {
   const FormRenderer({
-    super.key,
     required this.form,
     required this.schema,
+    super.key,
     this.transformErrors,
     this.messages = const IntlBundle(),
   });
@@ -71,7 +70,9 @@ class FormRenderer extends StatelessWidget {
   /// Build messages for one field.
   /// Returns a Map of validatorKey → ValidationMessageFunction
   Map<String, ValidationMessageFunction> _messagesForField(
-      String fieldName, JsonMap propSchema) {
+    String fieldName,
+    JsonMap propSchema,
+  ) {
     return {
       ValidationMessage.required: (error) {
         return _transformSingleError(

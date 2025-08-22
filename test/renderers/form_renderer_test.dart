@@ -26,21 +26,25 @@ void main() {
       });
       final schema = {
         "properties": {
-          "firstName": {"type": "string", "title": "First name"}
-        }
+          "firstName": {"type": "string", "title": "First name"},
+        },
       };
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-              body: ReactiveForm(
-                  formGroup: form,
-                  child: FormRenderer(form: form, schema: schema))),
+            body: ReactiveForm(
+              formGroup: form,
+              child: FormRenderer(form: form, schema: schema),
+            ),
+          ),
         ),
       );
 
-      expect(find.widgetWithText(ReactiveTextField<String>, "First name"),
-          findsOneWidget);
+      expect(
+        find.widgetWithText(ReactiveTextField<String>, "First name"),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders an integer field', (tester) async {
@@ -49,21 +53,25 @@ void main() {
       });
       final schema = {
         "properties": {
-          "age": {"type": "integer", "title": "Age"}
-        }
+          "age": {"type": "integer", "title": "Age"},
+        },
       };
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-              body: ReactiveForm(
-                  formGroup: form,
-                  child: FormRenderer(form: form, schema: schema))),
+            body: ReactiveForm(
+              formGroup: form,
+              child: FormRenderer(form: form, schema: schema),
+            ),
+          ),
         ),
       );
 
       expect(
-          find.widgetWithText(ReactiveTextField<int>, "Age"), findsOneWidget);
+        find.widgetWithText(ReactiveTextField<int>, "Age"),
+        findsOneWidget,
+      );
     });
   });
 }

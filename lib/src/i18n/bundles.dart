@@ -1,5 +1,5 @@
-import '../../generated/l10n.dart';
-import '../types/types.dart';
+import 'package:dart_json_schema_form/generated/l10n.dart';
+import 'package:dart_json_schema_form/src/types/types.dart';
 
 /// Intl-based implementation of DjsfMessageBundle.
 /// Requires that you generated localization code from .arb files.

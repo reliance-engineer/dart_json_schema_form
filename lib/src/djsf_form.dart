@@ -1,9 +1,9 @@
 import 'package:dart_json_schema_form/src/parsers/schema_parser.dart';
 import 'package:dart_json_schema_form/src/renderers/form_renderer.dart';
 import 'package:dart_json_schema_form/src/types/i18n.dart';
+import 'package:dart_json_schema_form/src/types/types.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'types/types.dart';
 
 /// DJSF (Dart JSON Schema Form)
 /// Entry point of the library.
@@ -34,8 +34,8 @@ class DjsfForm extends StatelessWidget {
   /// DjsfConfig.init(locale: 'de'); /// or DjsfConfig.init(bundle: IntlBundle());
   /// ```
   const DjsfForm({
-    super.key,
     required this.schema,
+    super.key,
     this.uiSchema,
     this.formData,
     this.onChanged,
@@ -124,50 +124,55 @@ class DjsfForm extends StatelessWidget {
     final String? description = schema['description'];
 
     return FutureBuilder<DjsfMessageBundle>(
-        future: DjsfConfig.resolve(locale: locale, bundle: messagesBundle),
-        builder: (context, snap) {
-          if (!snap.hasData) {
-            return SizedBox.shrink();
-          }
+      future: DjsfConfig.resolve(locale: locale, bundle: messagesBundle),
+      builder: (context, snap) {
+        if (!snap.hasData) {
+          return SizedBox.shrink();
+        }
 
-          assert(!snap.hasError, 'Error loading message bundle: ${snap.error}');
+        assert(!snap.hasError, 'Error loading message bundle: ${snap.error}');
 
-          return ReactiveFormBuilder(
-            form: () => SchemaParser.buildFormGroup(schema, formData: formData),
-            builder: (context, form, child) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
-                    const Divider(),
-                    if (description != null) Text(description),
-                    const SizedBox(height: 16),
-                    FormRenderer(
-                      form: form,
-                      schema: schema,
-                      transformErrors: transformErrors, // pass through
-                      messages: snap.data!,
+        return ReactiveFormBuilder(
+          form: () => SchemaParser.buildFormGroup(schema, formData: formData),
+          builder: (context, form, child) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
-                    const SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (form.valid) {
-                          debugPrint('Form value: ${form.value}');
-                        } else {
-                          form.markAllAsTouched();
-                        }
-                      },
-                      child: const Text('Submit'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        });
+                  ),
+                  const Divider(),
+                  if (description != null) Text(description),
+                  const SizedBox(height: 16),
+                  FormRenderer(
+                    form: form,
+                    schema: schema,
+                    transformErrors: transformErrors, // pass through
+                    messages: snap.data!,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (form.valid) {
+                        debugPrint('Form value: ${form.value}');
+                      } else {
+                        form.markAllAsTouched();
+                      }
+                    },
+                    child: const Text('Submit'),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

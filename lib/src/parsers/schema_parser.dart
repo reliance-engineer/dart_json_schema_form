@@ -1,5 +1,5 @@
 import 'package:reactive_forms/reactive_forms.dart';
-import '../types/types.dart';
+import 'package:dart_json_schema_form/src/types/types.dart';
 
 /// Utility class that converts JSON Schema into a Reactive Forms FormGroup.
 class SchemaParser {

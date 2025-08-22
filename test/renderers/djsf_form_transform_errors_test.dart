@@ -11,9 +11,9 @@ void main() {
         "email": {
           "type": "string",
           "title": "Email",
-          "pattern": r"^[^\s@]+@[^\s@]+\.[^\s@]+$"
-        }
-      }
+          "pattern": r"^[^\s@]+@[^\s@]+\.[^\s@]+$",
+        },
+      },
     };
 
     await tester.pumpWidget(

@@ -1,9 +1,8 @@
 import 'dart:ui';
 
+import 'package:dart_json_schema_form/generated/l10n.dart';
+import 'package:dart_json_schema_form/src/i18n/bundles.dart';
 import 'package:dart_json_schema_form/src/types/types.dart';
-
-import '../../generated/l10n.dart';
-import '../i18n/bundles.dart';
 
 /// Global configuration with defaults and a registry of built-in bundles.
 class DjsfConfig {
@@ -23,8 +22,10 @@ class DjsfConfig {
   /// 3) global bundle set via init
   /// 4) builtin by global/default locale
   /// 5) builtin 'en'
-  static Future<DjsfMessageBundle> resolve(
-      {String? locale, DjsfMessageBundle? bundle}) async {
+  static Future<DjsfMessageBundle> resolve({
+    String? locale,
+    DjsfMessageBundle? bundle,
+  }) async {
     if (bundle != null) return bundle;
 
     if (locale != null) {
