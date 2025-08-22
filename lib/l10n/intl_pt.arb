@@ -1,0 +1,15 @@
+{
+  "@@locale": "pt",
+  "required": "Este campo é obrigatório",
+  "minLength": "Deve ter pelo menos {limit} caracteres",
+  "@minLength": {"placeholders": {"limit": {}}},
+  "maxLength": "Deve ter no máximo {limit} caracteres",
+  "@maxLength": {"placeholders": {"limit": {}}},
+  "pattern": "Formato inválido",
+  "min": "Deve ser ≥ {limit}",
+  "@min": {"placeholders": {"limit": {}}},
+  "max": "Deve ser ≤ {limit}",
+  "@max": {"placeholders": {"limit": {}}},
+  "equals": "Deve ser igual a {allowed}",
+  "@equals": {"placeholders": {"allowed": {}}}
+}

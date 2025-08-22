@@ -1,7 +1,7 @@
 import 'package:dart_json_schema_form/dart_json_schema_form.dart';
 import 'package:flutter/material.dart';
 
-final _schema = {
+final validationMessagesSchema = {
   "title": "Sign up",
   "required": ["email"],
   "properties": {
@@ -23,11 +23,11 @@ class ValidationMessagesExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('DJSF Very Simple Example')),
+      appBar: AppBar(title: const Text('DJSF Validation messages')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: DjsfForm(
-          schema: _schema,
+          schema: validationMessagesSchema,
           transformErrors: (errors) {
             // Mutate messages conditionally (just like RJSF)
             return errors.map((e) {

@@ -1,0 +1,15 @@
+{
+  "@@locale": "ja",
+  "required": "この項目は必須です",
+  "minLength": "{limit}文字以上で入力してください",
+  "@minLength": {"placeholders": {"limit": {}}},
+  "maxLength": "{limit}文字以下で入力してください",
+  "@maxLength": {"placeholders": {"limit": {}}},
+  "pattern": "形式が正しくありません",
+  "min": "{limit}以上である必要があります",
+  "@min": {"placeholders": {"limit": {}}},
+  "max": "{limit}以下である必要があります",
+  "@max": {"placeholders": {"limit": {}}},
+  "equals": "{allowed}と等しくなければなりません",
+  "@equals": {"placeholders": {"allowed": {}}}
+}

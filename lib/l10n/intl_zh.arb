@@ -1,0 +1,15 @@
+{
+  "@@locale": "zh",
+  "required": "此字段为必填项",
+  "minLength": "至少需要 {limit} 个字符",
+  "@minLength": {"placeholders": {"limit": {}}},
+  "maxLength": "最多 {limit} 个字符",
+  "@maxLength": {"placeholders": {"limit": {}}},
+  "pattern": "格式不正确",
+  "min": "必须 ≥ {limit}",
+  "@min": {"placeholders": {"limit": {}}},
+  "max": "必须 ≤ {limit}",
+  "@max": {"placeholders": {"limit": {}}},
+  "equals": "必须等于 {allowed}",
+  "@equals": {"placeholders": {"allowed": {}}}
+}

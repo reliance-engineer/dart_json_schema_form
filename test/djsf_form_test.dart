@@ -25,6 +25,8 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+
       // Assert
       expect(find.text("A registration form"), findsOneWidget);
     });
@@ -48,6 +50,8 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+
       // Assert
       expect(find.text("DJSF Form Placeholder"), findsOneWidget);
     });
@@ -65,6 +69,8 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+
       expect(find.text('Register users'), findsOneWidget);
     });
 
@@ -79,6 +85,8 @@ void main() {
           ),
         ),
       );
+
+      await tester.pumpAndSettle();
 
       expect(find.text('Register users'), findsNothing);
     });
@@ -97,6 +105,8 @@ void main() {
         MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
       );
 
+      await tester.pumpAndSettle();
+
       expect(find.widgetWithText(ReactiveTextField<String>, "Username"),
           findsOneWidget);
     });
@@ -112,6 +122,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
       );
+
+      await tester.pumpAndSettle();
 
       expect(
           find.widgetWithText(ReactiveTextField<int>, "Age"), findsOneWidget);
@@ -130,6 +142,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
       );
+
+      await tester.pumpAndSettle();
 
       expect(find.widgetWithText(ReactiveTextField<String>, "First name"),
           findsOneWidget);
@@ -156,6 +170,8 @@ void main() {
         MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
       );
 
+      await tester.pumpAndSettle();
+
       // The text "Chuck" should appear as the field's initial value
       expect(find.text('Chuck'), findsOneWidget);
     });
@@ -172,6 +188,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
       );
+
+      await tester.pumpAndSettle();
 
       // Integer defaults are rendered as text in the input
       expect(find.text('42'), findsOneWidget);
@@ -200,6 +218,8 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+
       // Should show the override, not the default
       expect(find.text('Bruce'), findsOneWidget);
       expect(find.text('Chuck'), findsNothing);
@@ -217,6 +237,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: Scaffold(body: DjsfForm(schema: schema))),
       );
+
+      await tester.pumpAndSettle();
 
       // No default or formData → no prefilled text (label still exists, but no value)
       expect(find.text('Nickname'), findsOneWidget);

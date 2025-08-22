@@ -1,5 +1,7 @@
+import 'package:dart_json_schema_form/src/i18n/bundles.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import '../types/djsf_error.dart';
 import '../types/types.dart';
 
@@ -10,11 +12,13 @@ class FormRenderer extends StatelessWidget {
     required this.form,
     required this.schema,
     this.transformErrors,
+    this.messages = const IntlBundle(),
   });
 
   final FormGroup form;
   final JsonMap schema;
   final TransformErrors? transformErrors;
+  final DjsfMessageBundle messages;
 
   @override
   Widget build(BuildContext context) {
@@ -73,26 +77,30 @@ class FormRenderer extends StatelessWidget {
         return _transformSingleError(
           fieldName,
           'required',
-          'This field is required',
+          messages.required(),
           propSchema,
         );
       },
       ValidationMessage.minLength: (error) {
-        final limit = propSchema['minLength'];
+        final limit = (propSchema['minLength'] is int)
+            ? propSchema['minLength'] as int
+            : 0;
         return _transformSingleError(
           fieldName,
           'minLength',
-          'Must be at least $limit characters',
+          messages.minLength(limit),
           propSchema,
           params: {'limit': limit},
         );
       },
       ValidationMessage.maxLength: (error) {
-        final limit = propSchema['maxLength'];
+        final limit = (propSchema['maxLength'] is int)
+            ? propSchema['maxLength'] as int
+            : 0;
         return _transformSingleError(
           fieldName,
           'maxLength',
-          'Must be at most $limit characters',
+          messages.maxLength(limit),
           propSchema,
           params: {'limit': limit},
         );
@@ -101,29 +109,31 @@ class FormRenderer extends StatelessWidget {
         return _transformSingleError(
           fieldName,
           'pattern',
-          'Invalid format',
+          messages.pattern(),
           propSchema,
           params: {'pattern': propSchema['pattern']},
         );
       },
       ValidationMessage.min: (error) {
         final limit = propSchema['minimum'];
+        final numLimit = (limit is num) ? limit : num.tryParse('$limit');
         return _transformSingleError(
           fieldName,
           'min',
-          'Must be ≥ $limit',
+          messages.min(numLimit ?? 0),
           propSchema,
-          params: {'limit': limit},
+          params: {'limit': numLimit},
         );
       },
       ValidationMessage.max: (error) {
         final limit = propSchema['maximum'];
+        final numLimit = (limit is num) ? limit : num.tryParse('$limit');
         return _transformSingleError(
           fieldName,
           'max',
-          'Must be ≤ $limit',
+          messages.max(numLimit ?? 0),
           propSchema,
-          params: {'limit': limit},
+          params: {'limit': numLimit},
         );
       },
       ValidationMessage.equals: (error) {
@@ -131,7 +141,7 @@ class FormRenderer extends StatelessWidget {
         return _transformSingleError(
           fieldName,
           'equals',
-          'Must equal $allowed',
+          messages.equals(allowed),
           propSchema,
           params: {'allowed': allowed},
         );

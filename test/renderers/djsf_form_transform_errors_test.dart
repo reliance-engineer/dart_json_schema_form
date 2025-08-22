@@ -37,6 +37,8 @@ void main() {
       ),
     );
 
+    await tester.pumpAndSettle();
+
     // trigger required
     await tester.tap(find.text('Submit'));
     await tester.pumpAndSettle();
