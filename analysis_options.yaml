@@ -31,5 +31,5 @@ analyzer:
     invalid_annotation_target: ignore
   exclude:
     - lib/**/*.g.dart
-    - lib/generated/*.dart
+    - lib/generated/**/*.dart
     - test/**/*.mocks.dart
