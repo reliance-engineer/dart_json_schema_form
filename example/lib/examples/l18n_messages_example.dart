@@ -6,6 +6,7 @@ final _schema = {
   "required": ["email"],
   "properties": {
     "firstName": {"type": "string", "title": "Full Name", "minLength": 5},
+    "lastName": {"type": "string", "title": "Last Name", "minLength": 5},
     "email": {
       "type": "string",
       "title": "Email",
