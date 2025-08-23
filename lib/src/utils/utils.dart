@@ -6,10 +6,11 @@ class UiFieldConfig {
   UiFieldConfig({
     this.autofocus = false,
     this.emptyValue,
-    this.placeholder,
+    this.hint,
     this.autocomplete,
     this.description,
     this.inputType,
+    this.helper,
   });
 
   /// ui:autofocus
@@ -19,7 +20,7 @@ class UiFieldConfig {
   final dynamic emptyValue;
 
   /// ui:placeholder
-  final String? placeholder;
+  final String? hint;
 
   /// ui:autocomplete (mapped to autofillHints)
   final String? autocomplete;
@@ -29,6 +30,9 @@ class UiFieldConfig {
 
   /// ui:options.inputType (email|tel|url|number|password|textarea|...)
   final String? inputType;
+
+  /// ui:help
+  final String? helper;
 
   /// Heuristic: best keyboard type for string inputs based on inputType.
   TextInputType? keyboardTypeForString() {
@@ -41,7 +45,7 @@ class UiFieldConfig {
       case 'url':
         return TextInputType.url;
       case 'number':
-        return TextInputType.number;
+        return TextInputType.numberWithOptions(decimal: true);
       default:
         return null;
     }
@@ -65,11 +69,12 @@ UiFieldConfig readUiFor(JsonMap? uiSchema, String fieldName) {
 
   return UiFieldConfig(
     autofocus: raw['ui:autofocus'] == true,
-    emptyValue: raw.containsKey('ui:emptyValue') ? raw['ui:emptyValue'] : null,
-    placeholder: raw['ui:placeholder'] as String?,
+    emptyValue: raw['ui:emptyValue'],
+    hint: raw['ui:placeholder'] as String?,
     autocomplete: raw['ui:autocomplete'] as String?,
     description: raw['ui:description'] as String?,
     inputType: options['inputType'] as String?,
+    helper: raw['ui:help'] as String?,
   );
 }
 
@@ -77,7 +82,7 @@ UiFieldConfig readUiFor(JsonMap? uiSchema, String fieldName) {
 InputDecoration inputDecorationFromUi(String label, UiFieldConfig ui) {
   return InputDecoration(
     labelText: label,
-    hintText: ui.placeholder,
-    helperText: ui.description,
+    hintText: ui.hint,
+    helperText: ui.helper,
   );
 }

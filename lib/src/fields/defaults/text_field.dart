@@ -32,7 +32,9 @@ class DjsfTextField<T> extends ReactiveFormField<T, T> {
                   ui.autocomplete != null ? [ui.autocomplete!] : null,
               validationMessages: messages,
               onChanged: (control) {
-                if ((control.value == null) && ui.emptyValue != null) {
+                if ((control.value == null ||
+                        control.value!.toString().isEmpty) &&
+                    ui.emptyValue != null) {
                   control.updateValue(ui.emptyValue as T);
                 }
               },

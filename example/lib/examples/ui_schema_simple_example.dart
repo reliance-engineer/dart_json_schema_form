@@ -19,12 +19,13 @@ final _schema = {
 final _uiSchema = {
   "firstName": {
     "ui:autofocus": true,
-    "ui:emptyValue": "",
-    "ui:placeholder":
-        "ui:emptyValue causes this field to always be valid despite being required",
+    "ui:emptyValue": " ",
     "ui:autocomplete": "family-name",
   },
-  "lastName": {"ui:autocomplete": "given-name"},
+  "lastName": {
+    "ui:autocomplete": "given-name",
+    "ui:placeholder": "Your lastname",
+  },
   "age": {"ui:title": "Age of person", "ui:description": "(earth year)"},
   "bio": {"ui:widget": "textarea"},
   "password": {"ui:widget": "password", "ui:help": "Hint: Make it strong!"},

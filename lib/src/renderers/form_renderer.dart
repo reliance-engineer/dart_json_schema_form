@@ -50,7 +50,8 @@ class FormRenderer extends StatelessWidget {
   ) {
     final type = (propSchema['type'] as String?) ?? 'string';
     final ui = uiSchema?[name] as JsonMap? ?? {};
-    final widgetKey = (ui['ui:widget'] as String?) ?? type;
+    final modifier = (ui['ui:options'] as JsonMap?)?['inputType'] as String?;
+    final widgetKey = modifier ?? (ui['ui:widget'] as String?) ?? type;
 
     debugPrint("Building $name with type $type and widgetKey $widgetKey");
     debugPrint("Building with uiSchema: ${jsonEncode(ui)}");
