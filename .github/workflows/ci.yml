@@ -36,5 +36,4 @@ jobs:
         run: flutter test --no-pub --coverage
 
       - name: Send codecov data
-        if: github.ref == 'refs/heads/master' # && github.event_name == 'push'
         run: bash <(curl -s https://codecov.io/bash) -t ${{ env.codecov_token }}

@@ -153,6 +153,7 @@ class DjsfForm extends StatelessWidget {
                   FormRenderer(
                     form: form,
                     schema: schema,
+                    uiSchema: uiSchema,
                     transformErrors: transformErrors, // pass through
                     messages: snap.data!,
                   ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'examples/l18n_custom_bundle_example.dart';
 import 'examples/l18n_messages_example.dart';
+import 'examples/ui_schema_simple_example.dart';
 import 'examples/validation_messages_example.dart';
 import 'examples/very_simple_form_example.dart';
 
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
             (_) => const ValidationMessagesExample(),
         L18nMessagesExample.route: (_) => const L18nMessagesExample(),
         L18nCustomBundlesExample.route: (_) => const L18nCustomBundlesExample(),
+        UiSchemaSimpleExample.route: (_) => const UiSchemaSimpleExample(),
       },
     );
   }
@@ -91,6 +93,16 @@ class _HomePage extends StatelessWidget {
                 () => Navigator.of(
                   context,
                 ).pushNamed(L18nCustomBundlesExample.route),
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text('UI Schema simple Example'),
+            subtitle: const Text('Simple example applying uiSchema'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap:
+                () => Navigator.of(
+                  context,
+                ).pushNamed(UiSchemaSimpleExample.route),
           ),
           const Divider(),
           // Here will come more examples.
