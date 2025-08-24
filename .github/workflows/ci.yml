@@ -1,0 +1,40 @@
+name: Dart
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  codecov_token: ${{ secrets.CODECOV_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.32.6'
+     
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: I18n setup
+        run: flutter pub global activate intl_utils && flutter --no-color pub global run intl_utils:generate
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+        
+      - name: Analyze project source
+        run: dart analyze
+
+      - name: Run tests
+        run: flutter test --no-pub --coverage
+
+      - name: Send codecov data
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: bash <(curl -s https://codecov.io/bash) -t ${{ env.codecov_token }}
