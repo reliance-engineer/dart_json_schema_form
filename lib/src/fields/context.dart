@@ -4,15 +4,17 @@ import 'package:dart_json_schema_form/src/types/types.dart';
 
 class DjsfFieldContext {
   DjsfFieldContext({
+    required this.type,
     required this.form,
     required this.schema,
-    required this.uiSchema,
     required this.path,
     required this.propSchema,
     required this.messages,
-    required this.transformErrors,
+    this.uiSchema,
+    this.transformErrors,
   });
 
+  final String type;
   final FormGroup form;
   final JsonMap schema;
   final JsonMap? uiSchema;

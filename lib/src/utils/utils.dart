@@ -1,4 +1,4 @@
-import 'package:dart_json_schema_form/src/types/types.dart';
+import 'package:dart_json_schema_form/src/fields/context.dart';
 import 'package:flutter/material.dart';
 
 /// Parsed view of the uiSchema for a single field.
@@ -45,8 +45,9 @@ class UiFieldConfig {
       case 'url':
         return TextInputType.url;
       case 'number':
-      case 'integer':
         return TextInputType.numberWithOptions(decimal: true);
+      case 'integer':
+        return TextInputType.number;
       default:
         return null;
     }
@@ -59,13 +60,9 @@ class UiFieldConfig {
 
 /// Reads uiSchema[name] and returns a normalized UiFieldConfig.
 /// Expects the whole uiSchema object and the field name.
-UiFieldConfig readUiFor(JsonMap? uiSchema, String fieldName) {
-  final raw = (uiSchema?[fieldName] is Map)
-      ? Map<String, dynamic>.from(uiSchema![fieldName] as Map)
-      : const <String, dynamic>{};
-
-  final options = (raw['ui:options'] is Map)
-      ? Map<String, dynamic>.from(raw['ui:options'] as Map)
+UiFieldConfig readUiFor(DjsfFieldContext ctx) {
+  final raw = (ctx.uiSchema?[ctx.path] is Map)
+      ? Map<String, dynamic>.from(ctx.uiSchema?[ctx.path] as Map)
       : const <String, dynamic>{};
 
   return UiFieldConfig(
@@ -74,7 +71,7 @@ UiFieldConfig readUiFor(JsonMap? uiSchema, String fieldName) {
     hint: raw['ui:placeholder'] as String?,
     autocomplete: raw['ui:autocomplete'] as String?,
     description: raw['ui:description'] as String?,
-    inputType: options['inputType'] as String?,
+    inputType: ctx.type,
     helper: raw['ui:help'] as String?,
   );
 }

@@ -57,6 +57,7 @@ class FormRenderer extends StatelessWidget {
     debugPrint("Building with uiSchema: ${jsonEncode(ui)}");
 
     final ctx = DjsfFieldContext(
+      type: widgetKey,
       form: form,
       schema: schema,
       uiSchema: uiSchema,

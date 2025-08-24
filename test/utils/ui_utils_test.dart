@@ -1,10 +1,22 @@
+import 'package:dart_json_schema_form/dart_json_schema_form.dart';
+import 'package:dart_json_schema_form/src/i18n/bundles.dart';
+import 'package:dart_json_schema_form/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dart_json_schema_form/src/utils/utils.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 void main() {
   group('Ui utils', () {
     test('readUiFor parses uiSchema correctly', () {
+      final schema = <String, dynamic>{
+        'type': 'object',
+        'properties': <String, dynamic>{
+          'email': {
+            'type': 'string',
+          },
+        },
+      };
+
       final uiSchema = {
         'email': {
           'ui:autofocus': true,
@@ -17,7 +29,21 @@ void main() {
         },
       };
 
-      final ui = readUiFor(uiSchema, 'email');
+      final form = FormGroup({
+        'email': FormControl<String>(),
+      });
+
+      final ctx = DjsfFieldContext(
+        type: 'email',
+        form: form,
+        schema: schema,
+        uiSchema: uiSchema,
+        path: 'email',
+        propSchema: (schema['properties']! as JsonMap)['email'] as JsonMap,
+        messages: IntlBundle(),
+      );
+
+      final ui = readUiFor(ctx);
       expect(ui.autofocus, isTrue);
       expect(ui.emptyValue, equals(''));
       expect(ui.hint, equals('Enter email'));
@@ -32,44 +58,113 @@ void main() {
       expect(ui.keyboardTypeForString(), equals(TextInputType.emailAddress));
     });
 
-    test('password and textarea flags', () {
-      final uiPassword = readUiFor(
-        {
+    test('password flags', () {
+      final schema = <String, dynamic>{
+        'type': 'object',
+        'properties': <String, dynamic>{
           'pwd': {
-            'ui:options': {'inputType': 'password'},
+            'type': 'string',
           },
         },
-        'pwd',
-      );
-      expect(uiPassword.isPassword, isTrue);
-      expect(uiPassword.isTextarea, isFalse);
+      };
 
-      final uiTextarea = readUiFor(
-        {
+      final uiSchema = {
+        'pwd': {
+          'ui:options': {'inputType': 'password'},
+        },
+      };
+
+      final form = FormGroup({
+        'pwd': FormControl<String>(),
+      });
+
+      final ctx = DjsfFieldContext(
+        type: 'password',
+        form: form,
+        schema: schema,
+        uiSchema: uiSchema,
+        path: 'pwd',
+        propSchema: (schema['properties']! as JsonMap)['pwd'] as JsonMap,
+        messages: IntlBundle(),
+      );
+
+      final ui = readUiFor(ctx);
+      expect(ui.isPassword, isTrue);
+      expect(ui.isTextarea, isFalse);
+    });
+
+    test('textarea flags', () {
+      final schema = <String, dynamic>{
+        'type': 'object',
+        'properties': <String, dynamic>{
           'bio': {
-            'ui:options': {'inputType': 'textarea'},
+            'type': 'string',
           },
         },
-        'bio',
+      };
+
+      final uiSchema = {
+        'bio': {
+          'ui:options': {'inputType': 'textarea'},
+        },
+      };
+
+      final form = FormGroup({
+        'bio': FormControl<String>(),
+      });
+
+      final ctx = DjsfFieldContext(
+        type: 'textarea',
+        form: form,
+        schema: schema,
+        uiSchema: uiSchema,
+        path: 'bio',
+        propSchema: (schema['properties']! as JsonMap)['bio'] as JsonMap,
+        messages: IntlBundle(),
       );
-      expect(uiTextarea.isTextarea, isTrue);
-      expect(uiTextarea.isPassword, isFalse);
+
+      final ui = readUiFor(ctx);
+
+      expect(ui.isTextarea, isTrue);
+      expect(ui.isPassword, isFalse);
       expect(
-        uiTextarea.keyboardTypeForString(),
+        ui.keyboardTypeForString(),
         isNull,
       ); // default for textarea
     });
 
     test('inputDecorationFromUi applies hint/help', () {
-      final ui = readUiFor(
-        {
+      final schema = <String, dynamic>{
+        'type': 'object',
+        'properties': <String, dynamic>{
           'name': {
-            'ui:placeholder': 'Full name',
-            'ui:help': 'At least 2 words',
+            'type': 'string',
           },
         },
-        'name',
+      };
+
+      final uiSchema = {
+        'name': {
+          'ui:placeholder': 'Full name',
+          'ui:help': 'At least 2 words',
+        },
+      };
+
+      final form = FormGroup({
+        'name': FormControl<String>(),
+      });
+
+      final ctx = DjsfFieldContext(
+        type: 'string',
+        form: form,
+        schema: schema,
+        uiSchema: uiSchema,
+        path: 'name',
+        propSchema: (schema['properties']! as JsonMap)['name'] as JsonMap,
+        messages: IntlBundle(),
       );
+
+      final ui = readUiFor(ctx);
 
       final dec = inputDecorationFromUi('Name', ui);
       expect(dec.labelText, equals('Name'));

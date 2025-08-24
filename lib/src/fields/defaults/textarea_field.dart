@@ -18,7 +18,7 @@ class DjsfTextAreaField extends ReactiveFormField<String, String> {
   }) : super(
           builder: (ReactiveFormFieldState<String, String> field) {
             final title = ctx.propSchema['title'] as String? ?? ctx.path;
-            final ui = readUiFor(ctx.uiSchema, ctx.path);
+            final ui = readUiFor(ctx);
             final decoration = inputDecorationFromUi(title, ui);
             final messages = messagesForField(ctx, ctx.path, ctx.propSchema);
 

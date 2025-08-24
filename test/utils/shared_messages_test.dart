@@ -26,14 +26,16 @@ void main() {
     DjsfFieldContext ctx0({TransformErrors? transform}) {
       final form = FormGroup({
         'f': FormControl<String>(
-            validators: [Validators.required, Validators.minLength(3)])
+          validators: [Validators.required, Validators.minLength(3)],
+        ),
       });
       final schema = {
         'properties': {
-          'f': {'type': 'string', 'title': 'F', 'minLength': 3}
-        }
+          'f': {'type': 'string', 'title': 'F', 'minLength': 3},
+        },
       };
       return DjsfFieldContext(
+        type: 'string',
         form: form,
         schema: schema,
         uiSchema: const {},
@@ -60,23 +62,29 @@ void main() {
     });
 
     test('transformErrors overrides messages', () {
-      final ctx = ctx0(transform: (errors) {
-        return errors.map((e) {
-          if (e.name == 'required' && e.property == '.f') {
-            e.message = 'CUSTOM REQUIRED';
-          }
-          if (e.name == 'minLength') {
-            e.message = 'CUSTOM MINLEN';
-          }
-          return e;
-        }).toList();
-      });
+      final ctx = ctx0(
+        transform: (errors) {
+          return errors.map((e) {
+            if (e.name == 'required' && e.property == '.f') {
+              e.message = 'CUSTOM REQUIRED';
+            }
+            if (e.name == 'minLength') {
+              e.message = 'CUSTOM MINLEN';
+            }
+            return e;
+          }).toList();
+        },
+      );
 
       final map = messagesForField(ctx, 'f', ctx.propSchema);
       expect(
-          map[ValidationMessage.required]!.call({}), equals('CUSTOM REQUIRED'));
+        map[ValidationMessage.required]!.call({}),
+        equals('CUSTOM REQUIRED'),
+      );
       expect(
-          map[ValidationMessage.minLength]!.call({}), equals('CUSTOM MINLEN'));
+        map[ValidationMessage.minLength]!.call({}),
+        equals('CUSTOM MINLEN'),
+      );
     });
   });
 }

@@ -6,7 +6,7 @@ void main() {
   testWidgets('DjsfNumberField uses numeric keyboard', (tester) async {
     final schema = {
       'properties': {
-        'age': {'type': 'number', 'title': 'Age', 'minimum': 0},
+        'age': {'type': 'integer', 'title': 'Age', 'minimum': 0},
       },
     };
     final ui = {

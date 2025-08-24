@@ -17,22 +17,22 @@ Widget _app(Locale locale) {
       "minLengthMessage": {
         "type": "string",
         "title": "Min Length Field",
-        "minLength": 5
+        "minLength": 5,
       },
       "maxLengthMessage": {
         "type": "string",
         "title": "Max Length Field",
-        "maxLength": 5
+        "maxLength": 5,
       },
       "minimumMessage": {
         "type": "integer",
         "title": "Minimum Field",
-        "minimum": 2
+        "minimum": 2,
       },
       "maximumMessage": {
         "type": "integer",
         "title": "Maximum Field",
-        "maximum": 2
+        "maximum": 2,
       },
       "patternMessage": {
         "type": "string",
@@ -107,42 +107,54 @@ void main() {
 
       // 2) MIN LENGTH (Min Length Field, minLength=5): enter "abc" (3 chars)
       await tester.enterText(
-          await _textFieldByLabel(tester, 'Min Length Field'), 'abc');
+        await _textFieldByLabel(tester, 'Min Length Field'),
+        'abc',
+      );
       await tapButton(tester);
       await tester.pumpAndSettle();
       expect(find.text(minLengthMsg5), findsOneWidget);
 
       // 3) MAX LENGTH (Max Length Field, maxLength=5): enter 10 chars
       await tester.enterText(
-          await _textFieldByLabel(tester, 'Max Length Field'), 'abcdefghij');
+        await _textFieldByLabel(tester, 'Max Length Field'),
+        'abcdefghij',
+      );
       await tapButton(tester);
       await tester.pumpAndSettle();
       expect(find.text(maxLengthMsg5), findsOneWidget);
 
       // 4) PATTERN (Pattern Field expects email): enter "nope"
       await tester.enterText(
-          await _textFieldByLabel(tester, 'Pattern Field'), 'nope');
+        await _textFieldByLabel(tester, 'Pattern Field'),
+        'nope',
+      );
       await tapButton(tester);
       await tester.pumpAndSettle();
       expect(find.text(patternMsg), findsOneWidget);
 
       // 5) MINIMUM (Minimum Field, minimum=2): enter "1"
       await tester.enterText(
-          await _textFieldByLabel(tester, 'Minimum Field'), '1');
+        await _textFieldByLabel(tester, 'Minimum Field'),
+        '1',
+      );
       await tapButton(tester);
       await tester.pumpAndSettle();
       expect(find.text(minMsg2), findsOneWidget);
 
       // 6) MAXIMUM (Maximum Field, maximum=2): enter "3"
       await tester.enterText(
-          await _textFieldByLabel(tester, 'Maximum Field'), '3');
+        await _textFieldByLabel(tester, 'Maximum Field'),
+        '3',
+      );
       await tapButton(tester);
       await tester.pumpAndSettle();
       expect(find.text(maxMsg2), findsOneWidget);
 
       // 7) CONST/EQUALS (Equals Field, const=2): enter "4"
       await tester.enterText(
-          await _textFieldByLabel(tester, 'Equals Field'), '4');
+        await _textFieldByLabel(tester, 'Equals Field'),
+        '4',
+      );
       await tapButton(tester);
       await tester.pumpAndSettle();
       expect(find.text(equalsMsg2), findsOneWidget);

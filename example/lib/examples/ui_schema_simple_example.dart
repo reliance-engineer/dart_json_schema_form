@@ -13,6 +13,7 @@ final _schema = {
     "bio": {"type": "string", "title": "Bio"},
     "password": {"type": "string", "title": "Password", "minLength": 3},
     "telephone": {"type": "string", "title": "Telephone", "minLength": 10},
+    "funds": {"type": "number", "title": "Funds", "minimum": 0.0},
   },
 };
 
