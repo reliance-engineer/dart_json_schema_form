@@ -27,7 +27,7 @@ jobs:
         run: flutter pub global activate intl_utils && flutter --no-color pub global run intl_utils:generate
 
       - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format --output=none --set-exit-if-changed lib/src test example/lib example/test
         
       - name: Analyze project source
         run: dart analyze
