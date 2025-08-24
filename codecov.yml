@@ -1,0 +1,10 @@
+ignore:
+  - "*.g.dart"
+  - "*.gr.dart"
+  - "lib/generated"
+  - "lib/gen"
+  - "lib/core/router"
+  - "lib/core/extensions"
+  - "lib/core/di"
+  - "**_fake*"
+  - "test/"
