@@ -29,13 +29,13 @@ class DjsfTextField<T> extends ReactiveFormField<T, T> {
               autofocus: ui.autofocus,
               keyboardType: keyboardType ?? ui.keyboardTypeForString(),
               autofillHints:
-                  ui.autocomplete != null ? [ui.autocomplete!] : null,
+                  autofillHints(ui.autocomplete) ?? autofillHints(ctx.path),
               validationMessages: messages,
               onChanged: (control) {
                 if ((control.value == null ||
                         control.value!.toString().isEmpty) &&
                     ui.emptyValue != null) {
-                  control.updateValue(ui.emptyValue as T);
+                  control.updateValue(ui.emptyValue as T, emitEvent: false);
                 }
               },
             );

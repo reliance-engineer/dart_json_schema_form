@@ -45,6 +45,7 @@ class UiFieldConfig {
       case 'url':
         return TextInputType.url;
       case 'number':
+      case 'integer':
         return TextInputType.numberWithOptions(decimal: true);
       default:
         return null;
@@ -85,4 +86,20 @@ InputDecoration inputDecorationFromUi(String label, UiFieldConfig ui) {
     hintText: ui.hint,
     helperText: ui.helper,
   );
+}
+
+Iterable<String>? autofillHints(String? v) {
+  switch (v) {
+    case 'email':
+      return const [AutofillHints.email];
+    case 'name':
+      return const [AutofillHints.name];
+    case 'username':
+      return const [AutofillHints.username];
+    case 'tel':
+    case 'phone':
+      return const [AutofillHints.telephoneNumber];
+    default:
+      return v != null ? [v] : null;
+  }
 }

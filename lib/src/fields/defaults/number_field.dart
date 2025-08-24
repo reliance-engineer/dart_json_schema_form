@@ -35,7 +35,7 @@ class DjsfNumberField<T extends num> extends ReactiveFormField<T, T> {
               validationMessages: messages,
               onChanged: (control) {
                 if ((control.value == null) && ui.emptyValue != null) {
-                  control.updateValue(ui.emptyValue as T);
+                  control.updateValue(ui.emptyValue as T, emitEvent: false);
                 }
               },
             );

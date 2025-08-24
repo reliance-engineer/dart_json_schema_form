@@ -34,7 +34,10 @@ class DjsfTextAreaField extends ReactiveFormField<String, String> {
               maxLines: 4,
               onChanged: (control) {
                 if ((control.value == null) && ui.emptyValue != null) {
-                  control.updateValue(ui.emptyValue as String);
+                  control.updateValue(
+                    ui.emptyValue as String,
+                    emitEvent: false,
+                  );
                 }
               },
             );
