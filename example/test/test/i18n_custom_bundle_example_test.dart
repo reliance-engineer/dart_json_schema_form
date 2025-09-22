@@ -1,6 +1,7 @@
 import 'package:example/examples/l18n_custom_bundle_example.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../utils/base_app.dart';
 
 void main() {
   group('L18nMessagesExample', () {
@@ -8,7 +9,7 @@ void main() {
       'renders and switches required message between EN and ES shows custom message',
       (tester) async {
         await tester.pumpWidget(
-          const MaterialApp(home: L18nCustomBundlesExample()),
+          const BaseApp(child: L18nCustomBundlesExample()),
         );
 
         await tester.pumpAndSettle();
