@@ -1,4 +1,4 @@
-# dart\_json\_schema\_form
+# dart\\_json\\_schema\\_form
 
 [![codecov](https://codecov.io/gh/reliance-engineer/dart_json_schema_form/graph/badge.svg?token=1MT24L1VK3)](https://codecov.io/gh/reliance-engineer/dart_json_schema_form)
 [![Made with Flutter](https://img.shields.io/badge/Made%20with-Flutter_%3E%3D_3.24.2-blue?logo=flutter)](https://flutter.dev)
@@ -16,12 +16,17 @@ It allows you to render dynamic forms in Flutter from a **JSON Schema** + **uiSc
 
 ### Features
 
-* Schema-based field rendering
-* Built-in validators from JSON Schema keywords
-* RJSF-style `transformErrors` for custom error messages
-* Built-in localized validation messages (`en`, `es`, `de`, `it`, `pt`, `fr`, `nl`, `ja`, `zh`, `ru`, `pl`)
-* `uiSchema` props (`ui:placeholder`, `ui:description`, `ui:options.inputType`, etc.)
-* Custom field registry for extensibility
+  * Schema-based field rendering
+  * Built-in validators from JSON Schema keywords
+  * RJSF-style `transformErrors` for custom error messages
+  * Built-in localized validation messages (`en`, `es`, `de`, `it`, `pt`, `fr`, `nl`, `ja`, `zh`, `ru`, `pl`)
+  * `uiSchema` props (`ui:placeholder`, `ui:description`, `ui:options.inputType`, etc.)
+  * Custom field registry for extensibility
+  * Arrays with `minItems`, `maxItems`, `uniqueItems`
+  * Nested objects rendered as sub-forms
+  * Localized UI labels for arrays (`arrayAddItem`, `arrayRemoveItem`, `arrayItemTitle`)
+  * Container registry to override array rendering
+
 
 ---
 
@@ -33,8 +38,9 @@ It allows you to render dynamic forms in Flutter from a **JSON Schema** + **uiSc
 4. [Custom Validation Messages (transformErrors)](#custom-validation-messages-transformerrors)
 5. [Built-in Validation Messages (i18n)](#built-in-validation-messages-i18n)
 6. [uiSchema Example](#uischema-example)
-7. [Custom Fields](#️-custom-fields)
-8. [Docs & Contributing](#-docs--contributing)
+7. [Custom Fields](#custom-fields)
+8. [Arrays and Objects](#arrays-and-objects)
+9. [Docs & Contributing](#docs--contributing)
 
 ---
 
@@ -262,6 +268,132 @@ Resolution order:
 4. fallback to `string`
 
 ---
+
+✅ With these options, you can render dynamic forms with validators, customize or translate messages, and integrate seamlessly into your Flutter app.
+
+## 📜 Arrays and Objects
+
+### 📦 Arrays Example
+
+```dart
+final schema = {
+  "title": "Tags",
+  "type": "object",
+  "properties": {
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": {"type": "string", "title": "Tag"},
+      "minItems": 1
+    }
+  }
+};
+
+final uiSchema = {
+  "tags": {
+    "ui:options": {
+      "addButtonText": "Add tag",
+      "removable": true
+    }
+  }
+};
+
+DjsfForm(schema: schema, uiSchema: uiSchema);
+```
+
+Supported array options:
+
+* `minItems`, `maxItems`, `uniqueItems`
+* `ui:options.addButtonText` (button label)
+* `ui:options.addable`, `removable`, `orderable`
+
+---
+
+### 🏗️ Nested Objects Example
+
+```dart
+final schema = {
+  "title": "User",
+  "type": "object",
+  "properties": {
+    "addresses": {
+      "type": "array",
+      "title": "Addresses",
+      "items": {
+        "type": "object",
+        "title": "Address",
+        "required": ["city"],
+        "properties": {
+          "street": {"type": "string", "title": "Street"},
+          "city": {"type": "string", "title": "City"},
+          "zip": {"type": "string", "title": "ZIP", "pattern": r"^[0-9]{5}$"}
+        }
+      },
+      "minItems": 1
+    }
+  }
+};
+
+final uiSchema = {
+  "addresses": {
+    "ui:options": {"addButtonText": "Add address"},
+    "items": {
+      "street": {"ui:placeholder": "Main St 123"},
+      "zip": {"ui:placeholder": "12345"}
+    }
+  }
+};
+
+DjsfForm(schema: schema, uiSchema: uiSchema);
+```
+
+✅ This renders a list of nested forms where each item is a full address object.
+
+---
+
+### 🌐 Localized UI Labels
+
+Array-related labels (`Add item`, `Remove`, `Item #n`) are localized through the same Intl ARB files as validation messages.
+
+Default ARB keys:
+
+```jsonc
+"arrayAddItem": "Add item",
+"arrayRemoveItem": "Remove",
+"arrayItemTitle": "Item {index}"
+```
+
+Example in Spanish (`intl_es.arb`):
+
+```jsonc
+"arrayAddItem": "Añadir elemento",
+"arrayRemoveItem": "Eliminar",
+"arrayItemTitle": "Elemento {index}"
+```
+
+Usage (auto-resolves by locale):
+
+```dart
+DjsfForm(schema: schema, locale: \'es\');
+```
+
+---
+
+### 🔌 Container Registry (advanced)
+
+Developers can override how arrays are rendered via the container registry:
+
+```dart
+final myContainers = defaultContainerRegistry().copyWith(
+  arrayBuilder: (ctx) => MyFancyArrayWidget(ctx: ctx),
+);
+
+DjsfForm(
+  schema: schema,
+  uiSchema: uiSchema,
+  containerRegistry: myContainers,
+);
+```
 
 ## 📚 Docs & Contributing
 
