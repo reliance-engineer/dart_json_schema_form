@@ -80,7 +80,8 @@ class SchemaParser {
       children[name] = _buildControlFromSchema(
         propSchema: propSchema,
         isRequired: isReq,
-        initialValue: mapInit[name],
+        initialValue: mapInit[name] ??
+            _resolveInitialValue(name, propSchema, initialValue),
       );
     });
     return FormGroup(children);
