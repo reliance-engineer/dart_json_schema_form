@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dart_json_schema_form/dart_json_schema_form.dart';
+import 'package:dart_json_schema_form/src/containers/containers.dart';
 import 'package:dart_json_schema_form/src/fields/defaults.dart';
 import 'package:dart_json_schema_form/src/i18n/bundles.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ class FormRenderer extends StatelessWidget {
     this.messages = const IntlBundle(),
     this.transformErrors,
     this.fieldRegistry,
+    this.containerRegistry,
+    this.sectionTitle,
   });
 
   final FormGroup form;
@@ -24,6 +27,8 @@ class FormRenderer extends StatelessWidget {
   final DjsfMessageBundle messages;
   final TransformErrors? transformErrors;
   final DjsfFieldRegistry? fieldRegistry;
+  final DjsfContainerRegistry? containerRegistry; // NEW
+  final String? sectionTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +36,78 @@ class FormRenderer extends StatelessWidget {
     if (rawProps == null || rawProps is! Map || rawProps.isEmpty) {
       return const SizedBox.shrink();
     }
-    final properties = Map<String, dynamic>.from(rawProps);
-    final registry = fieldRegistry ?? defaultFieldRegistry();
 
+    final properties = Map<String, dynamic>.from(rawProps);
+    final fields = fieldRegistry ?? defaultFieldRegistry();
+    final containers = containerRegistry ?? defaultContainerRegistry(); // NEW
+
+    final children = <Widget>[
+      if (sectionTitle != null) ...[
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 4),
+          child: Text(
+            sectionTitle!,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        const Divider(height: 16),
+      ],
+    ];
+
+    for (final entry in form.controls.entries) {
+      final name = entry.key;
+      final control = entry.value;
+      final propSchema = properties[name] as JsonMap? ?? {};
+      final fieldUi = (uiSchema?[name] as JsonMap?) ?? const {};
+
+      if (control is FormGroup) {
+        // nested object → recurse
+        final title = (propSchema['title'] as String?) ?? name;
+        children.add(
+          FormRenderer(
+            form: control,
+            schema: propSchema,
+            uiSchema: (fieldUi['items'] is Map) // si vino desde arrays
+                ? Map<String, dynamic>.from(fieldUi['items'] as Map)
+                : fieldUi,
+            messages: messages,
+            transformErrors: transformErrors,
+            fieldRegistry: fields,
+            containerRegistry: containers,
+            // keep passing it down
+            sectionTitle: title,
+          ),
+        );
+        continue;
+      }
+
+      if (control is FormArray) {
+        // ARRAY → delega al containerRegistry
+        final ctx = DjsfArrayContext(
+          control: control,
+          arraySchema: propSchema,
+          arrayUiSchema: fieldUi,
+          messages: messages,
+          transformErrors: transformErrors,
+          fieldRegistry: fields,
+          fieldName: name,
+          parentSchema: schema,
+        );
+        children.add(containers.arrayBuilder(ctx));
+        continue;
+      }
+
+      children.add(
+        _buildWithRegistry(
+          name,
+          propSchema,
+          fields,
+        ),
+      );
+    }
     return Column(
-      children: form.controls.entries.map((entry) {
-        final name = entry.key;
-        final propSchema = properties[name] as JsonMap? ?? {};
-        return _buildWithRegistry(name, propSchema, registry);
-      }).toList(),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
     );
   }
 

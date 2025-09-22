@@ -71,7 +71,9 @@ class MyCustomBundle extends DjsfMessageBundle {
 }
 
 class L18nCustomBundlesExample extends StatefulWidget {
-  static const route = '/custom_l18n';
+  static const route = '/custom_l10n';
+  static const title = 'Custom I18n Example';
+  static const description = 'Show custom translations for validation messages';
 
   const L18nCustomBundlesExample({super.key});
 
@@ -86,9 +88,7 @@ class _L18nCustomBundlesExampleState extends State<L18nCustomBundlesExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('DJSF Custom Internationalization Example'),
-      ),
+      appBar: AppBar(title: const Text(L18nCustomBundlesExample.title)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(

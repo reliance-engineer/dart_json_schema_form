@@ -1,5 +1,5 @@
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:dart_json_schema_form/src/types/types.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 /// Utility class that converts JSON Schema into a Reactive Forms FormGroup.
 class SchemaParser {
@@ -11,38 +11,162 @@ class SchemaParser {
     JsonMap schema, {
     JsonMap? formData,
   }) {
-    final rawProps = schema['properties'];
-
-    // Ensure properties exist and are valid
-    if (rawProps == null || rawProps is! Map || rawProps.isEmpty) {
-      return FormGroup({});
-    }
-
-    final properties = Map<String, dynamic>.from(rawProps);
-
-    // Collect required fields from root-level "required": [...]
+    final props = _asMap(schema['properties']);
     final requiredList = (schema['required'] is List)
         ? List<String>.from(schema['required'] as List)
         : const <String>[];
-    final requiredSet = requiredList.toSet();
-
     final controls = <String, AbstractControl>{};
 
-    for (final entry in properties.entries) {
-      final name = entry.key;
-      final propSchema = _asMap(entry.value);
+    props.forEach((key, propSchemaDyn) {
+      final propSchema = _asMap(propSchemaDyn);
+      final isRequired = requiredList.contains(key);
+      final initial = _resolveInitialValue(key, propSchema, formData);
 
-      final initialValue = _resolveInitialValue(name, propSchema, formData);
-
-      final validators = _buildValidators(
-        propSchema,
-        isRequired: requiredSet.contains(name),
+      controls[key] = _buildControlFromSchema(
+        propSchema: propSchema,
+        isRequired: isRequired,
+        initialValue: initial,
       );
-
-      controls[name] = _buildTypedControl(propSchema, initialValue, validators);
-    }
+    });
 
     return FormGroup(controls);
+  }
+
+  static AbstractControl _buildControlFromSchema({
+    required JsonMap propSchema,
+    required bool isRequired,
+    dynamic initialValue,
+  }) {
+    final type = (propSchema['type'] as String?) ?? 'string';
+
+    switch (type) {
+      case 'object':
+        return _buildGroupForObject(propSchema, initialValue);
+
+      case 'array':
+        return _buildArrayForItems(propSchema, initialValue);
+
+      case 'integer':
+        return _buildLeafControl<int>(propSchema, isRequired, initialValue);
+      case 'number':
+        return _buildLeafControl<double>(propSchema, isRequired, initialValue);
+      case 'boolean':
+        return _buildLeafControl<bool>(propSchema, isRequired, initialValue);
+      default:
+        return _buildLeafControl<String>(
+          propSchema,
+          isRequired,
+          initialValue?.toString(),
+        );
+    }
+  }
+
+  static FormGroup _buildGroupForObject(
+    JsonMap objectSchema,
+    dynamic initialValue,
+  ) {
+    final props = _asMap(objectSchema['properties']);
+    final requiredList = (objectSchema['required'] is List)
+        ? List<String>.from(objectSchema['required'] as List)
+        : const <String>[];
+    final mapInit = (initialValue is Map)
+        ? Map<String, dynamic>.from(initialValue)
+        : const <String, dynamic>{};
+
+    final children = <String, AbstractControl>{};
+    props.forEach((name, sch) {
+      final propSchema = _asMap(sch);
+      final isReq = requiredList.contains(name);
+      children[name] = _buildControlFromSchema(
+        propSchema: propSchema,
+        isRequired: isReq,
+        initialValue: mapInit[name],
+      );
+    });
+    return FormGroup(children);
+  }
+
+  static FormArray _buildArrayForItems(
+    JsonMap arraySchema,
+    dynamic initialValue,
+  ) {
+    final itemsSchema = _asMap(
+      arraySchema['items'],
+    );
+
+    final listInit = (initialValue is List)
+        ? List<dynamic>.from(initialValue)
+        : const <dynamic>[];
+    final controls = <AbstractControl>[];
+
+    for (var i = 0; i < listInit.length; i++) {
+      controls.add(
+        _buildControlFromSchema(
+          propSchema: itemsSchema,
+          isRequired: false,
+          initialValue: listInit[i],
+        ),
+      );
+    }
+
+    final validators = <Validator<dynamic>>[];
+    if (arraySchema['minItems'] is int) {
+      final min = arraySchema['minItems'] as int;
+      validators.add(
+        DelegateValidator((control) {
+          final v = control.value as List?;
+          if (v == null) {
+            return {
+              'minItems': {'min': min},
+            };
+          }
+          return v.length >= min
+              ? null
+              : {
+                  'minItems': {'min': min},
+                };
+        }),
+      );
+    }
+    if (arraySchema['maxItems'] is int) {
+      final max = arraySchema['maxItems'] as int;
+      validators.add(
+        DelegateValidator((control) {
+          final v = control.value as List?;
+          if (v == null) return null; // vacío no viola max
+          return v.length <= max
+              ? null
+              : {
+                  'maxItems': {'max': max},
+                };
+        }),
+      );
+    }
+    if (arraySchema['uniqueItems'] == true) {
+      validators.add(
+        DelegateValidator((control) {
+          final v = control.value as List?;
+          if (v == null) return null;
+          final set = v.map((e) => e.toString()).toSet();
+          return set.length == v.length ? null : {'uniqueItems': true};
+        }),
+      );
+    }
+
+    return FormArray(controls, validators: validators);
+  }
+
+  static AbstractControl _buildLeafControl<T>(
+    JsonMap schema,
+    bool isRequired,
+    T? initialValue,
+  ) {
+    final validators = _buildValidators(
+      schema,
+      isRequired: isRequired,
+    );
+
+    return _buildTypedControl(schema, initialValue, validators);
   }
 
   /// Resolve initial value by priority: formData > schema.default > null.
@@ -139,10 +263,6 @@ class SchemaParser {
           value: value is bool ? value : null,
           validators: validators,
         );
-      case 'object':
-        return FormGroup({});
-      case 'array':
-        return FormArray([]);
       default:
         // Fallback to string
         return FormControl<String>(
@@ -152,8 +272,8 @@ class SchemaParser {
     }
   }
 
-  static JsonMap _asMap(dynamic v) {
+  static Map<String, dynamic> _asMap(dynamic v) {
     if (v is Map) return Map<String, dynamic>.from(v);
-    return <String, dynamic>{};
+    return const <String, dynamic>{};
   }
 }

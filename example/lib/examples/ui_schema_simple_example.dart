@@ -51,6 +51,8 @@ const languages = [
 
 class UiSchemaSimpleExample extends StatefulWidget {
   static const route = '/simple-ui-example';
+  static const title = 'UI Schema simple Example';
+  static const description = 'Simple example applying uiSchema';
 
   const UiSchemaSimpleExample({super.key});
 
@@ -64,7 +66,7 @@ class _UiSchemaSimpleExampleState extends State<UiSchemaSimpleExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('DJSF UI Schema Simple Example')),
+      appBar: AppBar(title: const Text(UiSchemaSimpleExample.title)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(

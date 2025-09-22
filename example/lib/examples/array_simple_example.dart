@@ -2,17 +2,20 @@ import 'package:dart_json_schema_form/dart_json_schema_form.dart';
 import 'package:flutter/material.dart';
 
 final _schema = {
-  "title": "Sign up",
-  "required": ["email"],
+  "title": "Tags",
+  "type": "object",
   "properties": {
-    "firstName": {"type": "string", "title": "Full Name", "minLength": 5},
-    "lastName": {"type": "string", "title": "Last Name", "minLength": 5},
-    "email": {
-      "type": "string",
-      "title": "Email",
-      "pattern": r"^[^\s@]+@[^\s@]+\.[^\s@]+$",
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": {"type": "string", "title": "Tag"},
+      "minItems": 1,
     },
-    "age": {"type": "integer", "title": "Age", "minimum": 18},
+  },
+};
+final _uiSchema = {
+  "tags": {
+    "ui:options": {"addButtonText": "Add tag", "removable": true},
   },
 };
 
@@ -30,24 +33,24 @@ const languages = [
   'pl',
 ];
 
-class L18nMessagesExample extends StatefulWidget {
-  static const route = '/l18n';
-  static const title = 'Internationalization Example';
-  static const description = 'Show validation messages in built-in languages';
+class ArraySimpleExample extends StatefulWidget {
+  const ArraySimpleExample({super.key});
 
-  const L18nMessagesExample({super.key});
+  static const route = '/array-simple';
+  static const title = 'Array simple Example';
+  static const description = 'Simple example with Array field';
 
   @override
-  State<L18nMessagesExample> createState() => _L18nMessagesExampleState();
+  State<ArraySimpleExample> createState() => _ArraySimpleExampleState();
 }
 
-class _L18nMessagesExampleState extends State<L18nMessagesExample> {
+class _ArraySimpleExampleState extends State<ArraySimpleExample> {
   String language = 'en';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(L18nMessagesExample.title)),
+      appBar: AppBar(title: const Text(ArraySimpleExample.title)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -75,7 +78,13 @@ class _L18nMessagesExampleState extends State<L18nMessagesExample> {
                 ),
               ),
               Divider(height: 12),
-              Flexible(child: DjsfForm(schema: _schema, locale: language)),
+              Flexible(
+                child: DjsfForm(
+                  schema: _schema,
+                  uiSchema: _uiSchema,
+                  locale: language,
+                ),
+              ),
             ],
           ),
         ),

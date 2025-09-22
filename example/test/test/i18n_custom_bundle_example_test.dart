@@ -14,10 +14,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // App bar
-        expect(
-          find.text('DJSF Custom Internationalization Example'),
-          findsOneWidget,
-        );
+        expect(find.text(L18nCustomBundlesExample.title), findsOneWidget);
 
         // Language buttons exist
         for (final code in languages) {

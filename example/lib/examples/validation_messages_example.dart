@@ -17,13 +17,15 @@ final validationMessagesSchema = {
 
 class ValidationMessagesExample extends StatelessWidget {
   static const route = '/validation';
+  static const title = 'Validation messages';
+  static const description = 'Form validation with custom messages';
 
   const ValidationMessagesExample({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('DJSF Validation messages')),
+      appBar: AppBar(title: const Text(title)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: DjsfForm(

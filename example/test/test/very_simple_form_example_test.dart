@@ -12,7 +12,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // App bar title
-      expect(find.text('DJSF Very Simple Example'), findsOneWidget);
+      expect(find.text(VerySimpleFormExample.title), findsOneWidget);
 
       // Schema title & description
       expect(find.text('A registration form'), findsOneWidget);

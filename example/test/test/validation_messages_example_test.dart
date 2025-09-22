@@ -14,7 +14,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // App bar
-        expect(find.text('DJSF Validation messages'), findsOneWidget);
+        expect(find.text(ValidationMessagesExample.title), findsOneWidget);
 
         // Field labels
         expect(find.text('Full Name'), findsOneWidget);
