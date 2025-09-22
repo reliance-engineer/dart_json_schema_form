@@ -32,15 +32,20 @@ It allows you to render dynamic forms in Flutter from a **JSON Schema** + **uiSc
 
 ## 📑 Table of Contents
 
-1. [Installation](#installation)
-2. [Basic Usage](#basic-usage)
-3. [Validation Example](#validation-example)
-4. [Custom Validation Messages (transformErrors)](#custom-validation-messages-transformerrors)
-5. [Built-in Validation Messages (i18n)](#built-in-validation-messages-i18n)
-6. [uiSchema Example](#uischema-example)
-7. [Custom Fields](#custom-fields)
-8. [Arrays and Objects](#arrays-and-objects)
-9. [Docs & Contributing](#docs--contributing)
+- [Overview](#-overview)
+- [Basic Usage](#-basic-usage)
+- [Validation Example](#-validation-example)
+- [Custom Validation Messages (transformErrors)](#-custom-validation-messages-transformerrors)
+- [Built-in Validation Messages (i18n)](#-built-in-validation-messages-i18n))
+- [uiSchema Example](#-uischema-example)
+- [Custom Fields](#%EF%B8%8F-custom-fields)
+- [Arrays and Objects](#-arrays-and-objects)
+   * [Arrays Example](#-arrays-example)
+   * [Nested Objects Example](#%EF%B8%8F-nested-objects-example)
+   * [Localized UI Labels](#-localized-ui-labels)
+   * [Container Registry (advanced)](#-container-registry-advanced)
+- [Docs & Contributing](#-docs--contributing)
+
 
 ---
 
