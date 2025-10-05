@@ -35,7 +35,7 @@ void main() {
 
       final ctx = DjsfFieldContext(
         type: 'email',
-        form: form,
+        control: form.control('email'),
         schema: schema,
         uiSchema: uiSchema,
         path: 'email',
@@ -80,7 +80,7 @@ void main() {
 
       final ctx = DjsfFieldContext(
         type: 'password',
-        form: form,
+        control: form.control('pwd'),
         schema: schema,
         uiSchema: uiSchema,
         path: 'pwd',
@@ -115,7 +115,7 @@ void main() {
 
       final ctx = DjsfFieldContext(
         type: 'textarea',
-        form: form,
+        control: form.control('bio'),
         schema: schema,
         uiSchema: uiSchema,
         path: 'bio',
@@ -156,7 +156,7 @@ void main() {
 
       final ctx = DjsfFieldContext(
         type: 'string',
-        form: form,
+        control: form.control('name'),
         schema: schema,
         uiSchema: uiSchema,
         path: 'name',

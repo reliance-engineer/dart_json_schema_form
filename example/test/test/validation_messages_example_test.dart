@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:example/examples/validation_messages_example.dart';
 
+import '../utils/base_app.dart';
+
 void main() {
   group('ValidationMessagesExample', () {
     testWidgets(
       'renders and shows default + custom messages via transformErrors',
       (tester) async {
         await tester.pumpWidget(
-          const MaterialApp(home: ValidationMessagesExample()),
+          const BaseApp(child: ValidationMessagesExample()),
         );
 
         await tester.pumpAndSettle();
 
         // App bar
-        expect(find.text('DJSF Validation messages'), findsOneWidget);
+        expect(find.text(ValidationMessagesExample.title), findsOneWidget);
 
         // Field labels
         expect(find.text('Full Name'), findsOneWidget);

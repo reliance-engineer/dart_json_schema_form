@@ -1,18 +1,19 @@
 import 'package:example/examples/l18n_messages_example.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../utils/base_app.dart';
 
 void main() {
   group('L18nMessagesExample', () {
     testWidgets('renders and switches required message between EN and ES', (
       tester,
     ) async {
-      await tester.pumpWidget(const MaterialApp(home: L18nMessagesExample()));
+      await tester.pumpWidget(const BaseApp(child: L18nMessagesExample()));
 
       await tester.pumpAndSettle();
 
       // App bar
-      expect(find.text('DJSF Internationalization Example'), findsOneWidget);
+      expect(find.text(L18nMessagesExample.title), findsOneWidget);
 
       // Language buttons exist
       for (final code in languages) {
@@ -38,7 +39,7 @@ void main() {
     testWidgets('switches to DE and shows the German required message', (
       tester,
     ) async {
-      await tester.pumpWidget(const MaterialApp(home: L18nMessagesExample()));
+      await tester.pumpWidget(const BaseApp(child: L18nMessagesExample()));
 
       // Switch to DE
       await tester.tap(find.text('DE'));

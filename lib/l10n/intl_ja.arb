@@ -11,5 +11,13 @@
   "max": "{limit}以下である必要があります",
   "@max": {"placeholders": {"limit": {}}},
   "equals": "{allowed}と等しくなければなりません",
-  "@equals": {"placeholders": {"allowed": {}}}
+  "@equals": {"placeholders": {"allowed": {}}},
+  "arrayAddItem": "項目を追加",
+  "arrayRemoveItem": "削除",
+  "arrayItemTitle": "項目 {index}",
+  "@arrayItemTitle": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  }
 }

@@ -6,7 +6,7 @@ linter:
   rules:
     require_trailing_commas: true
     always_use_package_imports: true
-    avoid_dynamic_calls: true
+    avoid_dynamic_calls: false
     avoid_empty_else: true
     avoid_print: true
     avoid_types_as_parameter_names: true

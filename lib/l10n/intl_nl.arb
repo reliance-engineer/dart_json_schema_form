@@ -11,5 +11,13 @@
   "max": "Moet ≤ {limit} zijn",
   "@max": {"placeholders": {"limit": {}}},
   "equals": "Moet gelijk zijn aan {allowed}",
-  "@equals": {"placeholders": {"allowed": {}}}
+  "@equals": {"placeholders": {"allowed": {}}},
+  "arrayAddItem": "Item toevoegen",
+  "arrayRemoveItem": "Verwijderen",
+  "arrayItemTitle": "Item {index}",
+  "@arrayItemTitle": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  }
 }

@@ -36,7 +36,7 @@ void main() {
       };
       return DjsfFieldContext(
         type: 'string',
-        form: form,
+        control: form.control('f'),
         schema: schema,
         uiSchema: const {},
         path: 'f',

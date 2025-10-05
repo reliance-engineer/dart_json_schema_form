@@ -11,5 +11,13 @@
   "max": "Debe ser ≤ {limit}",
   "@max": {"placeholders": {"limit": {}}},
   "equals": "Debe ser igual a {allowed}",
-  "@equals": {"placeholders": {"allowed": {}}}
+  "@equals": {"placeholders": {"allowed": {}}},
+  "arrayAddItem": "Añadir elemento",
+  "arrayRemoveItem": "Eliminar",
+  "arrayItemTitle": "Elemento {index}",
+  "@arrayItemTitle": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  }
 }
