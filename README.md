@@ -279,6 +279,9 @@ Resolution order:
 ## 📜 Arrays and Objects
 
 ### 📦 Arrays Example
+--
+#### Dynamic Array
+This json will render a --"dynamic"-- array of fields. New fields can be added and/or removed from the form. Each item will have a field with the specified `item.type`.
 
 ```dart
 final schema = {
@@ -308,9 +311,37 @@ DjsfForm(schema: schema, uiSchema: uiSchema);
 
 Supported array options:
 
-* `minItems`, `maxItems`, `uniqueItems`
-* `ui:options.addButtonText` (button label)
-* `ui:options.addable`, `removable`, `orderable`
+* `minItems` : If defined the form will start with an empty blanc field. If not then just the `Add Item` button will be shown.
+* `maxItems`, `uniqueItems` : Used for validation.
+* `ui:options.addButtonText`: To modify the `Add Item` label.
+* `ui:options.addable`, `removable`, `orderable`: If you want the list to be static, removable or orderable.
+
+--
+
+#### Static Array
+
+This json will render a --"static"-- array of fields. Is not possible to add new fields to the array. Each item will have a field with the specified `item.type`.
+
+```dart
+final schema = {
+  "title": "Tags",
+  "type": "object",
+  "properties": {
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": [
+         {"type": "string", "title": "Tag"}
+       ],
+    }
+  }
+};
+
+final uiSchema = {
+};
+
+DjsfForm(schema: schema, uiSchema: uiSchema);
+```
 
 ---
 
