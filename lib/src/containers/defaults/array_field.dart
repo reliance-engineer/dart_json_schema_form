@@ -1,36 +1,40 @@
 // lib/src/renderers/array_field.dart
 
 import 'dart:async';
+
 import 'package:dart_json_schema_form/dart_json_schema_form.dart';
 import 'package:dart_json_schema_form/generated/l10n.dart' as l10n;
+import 'package:dart_json_schema_form/src/containers/containers.dart';
 import 'package:dart_json_schema_form/src/renderers/form_renderer.dart';
-import 'package:dart_json_schema_form/src/utils/shared_messages.dart';
-import 'package:dart_json_schema_form/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DjsfArrayField extends StatefulWidget {
   const DjsfArrayField({
-    required this.arrayControl,
-    required this.arraySchema,
-    required this.arrayUiSchema,
-    required this.registry,
-    required this.messages,
-    required this.parentSchema,
-    required this.fieldName,
+    required this.ctx,
+    required this.onDelete,
     super.key,
-    this.transformErrors,
   });
 
-  final FormArray arrayControl;
-  final JsonMap arraySchema;
-  final JsonMap arrayUiSchema;
-  final DjsfFieldRegistry registry;
-  final DjsfMessageBundle messages;
-  final TransformErrors? transformErrors;
+  final DjsfArrayContext ctx;
 
-  final JsonMap parentSchema;
-  final String fieldName;
+  FormArray get arrayControl => ctx.control;
+
+  JsonMap get arraySchema => ctx.arraySchema;
+
+  JsonMap get arrayUiSchema => ctx.arrayUiSchema;
+
+  DjsfFieldRegistry get registry => ctx.fieldRegistry;
+
+  DjsfMessageBundle get messages => ctx.messages;
+
+  TransformErrors? get transformErrors => ctx.transformErrors;
+
+  JsonMap get parentSchema => ctx.parentSchema;
+
+  String get fieldName => ctx.fieldName;
+
+  final ValueChanged<int> onDelete;
 
   @override
   State<DjsfArrayField> createState() => _DjsfArrayFieldState();
@@ -54,11 +58,6 @@ class _DjsfArrayFieldState extends State<DjsfArrayField> {
         widget.arrayControl.add(_newControlForItem(itemSchema));
       }
     }
-
-    // Escuchar cambios del array para reconstruir la UI
-    _sub = widget.arrayControl.valueChanges.listen((_) {
-      if (mounted) setState(() {});
-    });
   }
 
   @override
@@ -75,9 +74,14 @@ class _DjsfArrayFieldState extends State<DjsfArrayField> {
         ? Map<String, dynamic>.from(widget.arrayUiSchema['ui:options'] as Map)
         : const <String, dynamic>{};
 
-    final addable = uiOptions['addable'] != false;
-    final removable = uiOptions['removable'] != false;
-    final orderable = uiOptions['orderable'] != false; // hook futuro
+    /// If the [arraySchema['items']] is a List we don't support add or remove
+    /// as is a fixed length list.
+    final addable =
+        widget.arraySchema['items'] is! List && uiOptions['addable'] != false;
+    final removable =
+        widget.arraySchema['items'] is! List && uiOptions['removable'] != false;
+    final orderable =
+        widget.arraySchema['items'] is! List && uiOptions['orderable'] != false;
 
     final addText = (uiOptions['addButtonText'] as String?) ??
         l10n.S.of(context).arrayAddItem;
@@ -88,45 +92,62 @@ class _DjsfArrayFieldState extends State<DjsfArrayField> {
       children: [
         Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: widget.arrayControl.controls.length,
-          itemBuilder: (context, index) {
-            final itemSchema = _asMap(widget.arraySchema['items']);
-            final itemUi = _itemUiSchema(widget.arrayUiSchema);
-            final control = widget.arrayControl.controls[index];
+        StreamBuilder<List<AbstractControl>>(
+          stream: widget.arrayControl.collectionChanges,
+          builder: (context, snap) {
+            var list = snap.data ?? widget.arrayControl.controls;
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final itemSchema = _asMap(widget.arraySchema['items']);
+                final itemUi = _itemUiSchema(widget.arrayUiSchema);
+                final control = list[index];
 
-            Widget itemChild;
-            if (control is FormGroup) {
-              // ítem objeto → sub-form
-              itemChild = _buildObjectItem(index, control, itemSchema, itemUi);
-            } else {
-              // ítem primitivo → un solo campo
-              itemChild =
-                  _buildPrimitiveItem(index, control, itemSchema, itemUi);
-            }
+                Widget itemChild;
+                if (control is FormGroup) {
+                  // sub formular
+                  itemChild =
+                      _buildObjectItem(index, control, itemSchema, itemUi);
+                } else {
+                  // single field
+                  itemChild = FormRenderer.buildWithRegistry(
+                    index.toString(),
+                    itemSchema,
+                    widget.registry,
+                    schema: widget.parentSchema,
+                    control: control,
+                    messages: widget.messages,
+                    transformErrors: widget.transformErrors,
+                  );
+                }
 
-            return Card(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    itemChild,
-                    if (removable)
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton.icon(
-                          onPressed: () => widget.arrayControl.removeAt(index),
-                          icon: const Icon(Icons.delete_outline),
-                          label: Text(removeText),
-                        ),
-                      ),
-                    if (!orderable) const SizedBox.shrink(),
-                  ],
-                ),
-              ),
+                return Card(
+                  key: ObjectKey(control.hashCode),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        itemChild,
+                        if (removable)
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton.icon(
+                              onPressed: () {
+                                widget.onDelete(index);
+                              },
+                              icon: const Icon(Icons.delete_outline),
+                              label: Text(removeText),
+                            ),
+                          ),
+                        if (!orderable) const SizedBox.shrink(),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
         ),
@@ -135,110 +156,12 @@ class _DjsfArrayFieldState extends State<DjsfArrayField> {
             onPressed: () {
               final itemSchema = _asMap(widget.arraySchema['items']);
               widget.arrayControl.add(_newControlForItem(itemSchema));
-              // setState no es estrictamente necesario porque escuchamos valueChanges,
-              // pero no hace daño y da respuesta visual inmediata.
-              setState(() {});
             },
             icon: const Icon(Icons.add),
             label: Text(addText),
           ),
       ],
     );
-  }
-
-  // Render de item primitivo usando el registry
-  Widget _buildPrimitiveItem(
-    int index,
-    AbstractControl control,
-    JsonMap itemSchema,
-    JsonMap itemUi,
-  ) {
-    final type = (itemSchema['type'] as String?) ?? 'string';
-    final title = (itemSchema['title'] as String?) ?? 'Item $index';
-
-    final fakeCtx = DjsfFieldContext(
-      form: FormGroup({'_': control}),
-      schema: {
-        'properties': {'_': itemSchema},
-      },
-      uiSchema: {'_': itemUi},
-      path: '_',
-      propSchema: itemSchema,
-      messages: widget.messages,
-      transformErrors: widget.transformErrors,
-      type: 'array',
-    );
-
-    final ui = readUiFor(fakeCtx);
-    final decoration = InputDecoration(
-      labelText: title,
-      hintText: ui.hint,
-      helperText: ui.description ?? ui.helper,
-    );
-
-    final messages = messagesForField(fakeCtx, '_', itemSchema);
-
-    switch (type) {
-      case 'integer':
-        return ReactiveTextField<int>(
-          formControl: control as FormControl<int>,
-          decoration: decoration,
-          keyboardType: TextInputType.number,
-          validationMessages: messages,
-          onChanged: (c) {
-            if ((c.value == null) && ui.emptyValue != null) {
-              final v = ui.emptyValue;
-              if (v is int) {
-                c.updateValue(v, emitEvent: false);
-              } else if (v is num) {
-                c.updateValue(v.toInt(), emitEvent: false);
-              } else if (v is String) {
-                final parsed = int.tryParse(v);
-                if (parsed != null) c.updateValue(parsed, emitEvent: false);
-              }
-            }
-          },
-        );
-
-      case 'number':
-        return ReactiveTextField<num>(
-          formControl: control as FormControl<num>,
-          decoration: decoration,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          validationMessages: messages,
-          onChanged: (c) {
-            if ((c.value == null) && ui.emptyValue != null) {
-              final v = ui.emptyValue;
-              if (v is num) {
-                c.updateValue(v, emitEvent: false);
-              } else if (v is String) {
-                final parsed = num.tryParse(v);
-                if (parsed != null) c.updateValue(parsed, emitEvent: false);
-              }
-            }
-          },
-        );
-
-      case 'string':
-      default:
-        return ReactiveTextField<String>(
-          formControl: control as FormControl<String>,
-          decoration: decoration,
-          autofocus: ui.autofocus,
-          keyboardType: ui.keyboardTypeForString(),
-          autofillHints: ui.autocomplete != null ? [ui.autocomplete!] : null,
-          obscureText: ui.isPassword,
-          minLines: ui.isTextarea ? 3 : 1,
-          maxLines: ui.isTextarea ? 6 : 1,
-          validationMessages: messages,
-          onChanged: (c) {
-            if ((c.value == null || c.value!.isEmpty) &&
-                ui.emptyValue != null) {
-              c.updateValue(ui.emptyValue as String?, emitEvent: false);
-            }
-          },
-        );
-    }
   }
 
   Widget _buildObjectItem(

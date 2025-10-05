@@ -91,21 +91,36 @@ class SchemaParser {
     JsonMap arraySchema,
     dynamic initialValue,
   ) {
-    final itemsSchema = _asMap(
-      arraySchema['items'],
-    );
+    final itemsSchema = arraySchema['items'] is List
+        ? (arraySchema['items'] as List).map((e) => _asMap(e)).toList()
+        : _asMap(arraySchema['items']);
 
     final listInit = (initialValue is List)
         ? List<dynamic>.from(initialValue)
         : const <dynamic>[];
+
     final controls = <AbstractControl>[];
+    String? type;
 
     for (var i = 0; i < listInit.length; i++) {
+      final type0 = (itemsSchema is List)
+          ? itemsSchema[i]['type']
+          : (itemsSchema is Map)
+              ? itemsSchema['type']
+              : null;
+
+      type ??= type0;
+
+      assert(
+        type == type0 || type0 == 'dynamic',
+        'All items must have the same type.',
+      );
+
       controls.add(
         _buildControlFromSchema(
-          propSchema: itemsSchema,
+          propSchema: (itemsSchema is List) ? itemsSchema[i] : itemsSchema,
           isRequired: false,
-          initialValue: listInit[i],
+          initialValue: listInit.length > i ? listInit[i] : null,
         ),
       );
     }
@@ -154,7 +169,41 @@ class SchemaParser {
       );
     }
 
-    return FormArray(controls, validators: validators);
+    return createFormArray(controls, type, validators: validators);
+  }
+
+  static FormArray createFormArray(
+    List<AbstractControl> controls,
+    String? type, {
+    List<Validator<dynamic>>? validators,
+  }) {
+    return switch (type?.toLowerCase()) {
+      'int' => FormArray<int>(
+          controls as List<AbstractControl<int>>,
+          validators: validators ?? [],
+        ),
+      'double' => FormArray<double>(
+          controls as List<AbstractControl<double>>,
+          validators: validators ?? [],
+        ),
+      'bool' => FormArray<bool>(
+          controls as List<AbstractControl<bool>>,
+          validators: validators ?? [],
+        ),
+      'String' => FormArray<String>(
+          controls as List<AbstractControl<String>>,
+          validators: validators ?? [],
+        ),
+      'array' => FormArray(
+          controls,
+          validators: validators ?? [],
+        ),
+      'object' => FormArray(
+          controls,
+          validators: validators ?? [],
+        ),
+      _ => FormArray<dynamic>(controls, validators: validators ?? []),
+    };
   }
 
   static AbstractControl _buildLeafControl<T>(
@@ -181,6 +230,25 @@ class SchemaParser {
     }
     if (propSchema.containsKey('default')) {
       return propSchema['default'];
+    }
+
+    if (propSchema.containsKey('items')) {
+      final items = propSchema['items'];
+      if (items is List) {
+        return List<dynamic>.generate(items.length, (index) {
+          if (items[index] is Map) {
+            return _asMap(items[index])['default'];
+          }
+          return null;
+        });
+      }
+      if (items is Map) {
+        final defa = _asMap(items)['default'];
+        if (defa is List) {
+          return defa;
+        }
+        return defa != null ? [defa] : null;
+      }
     }
     return null;
   }

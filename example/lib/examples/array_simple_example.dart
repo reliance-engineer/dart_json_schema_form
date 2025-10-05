@@ -8,11 +8,19 @@ final _schema = {
     "tags": {
       "type": "array",
       "title": "Tags",
-      "items": {"type": "string", "title": "Tag"},
+      "items": {
+        "type": "object",
+        "title": "Tag",
+        "properties": {
+          "name": {"type": "string", "title": "Name", "default": "foo"},
+          "age": {"type": "integer", "title": "Age", "default": "10"},
+        },
+      },
       "minItems": 1,
     },
   },
 };
+
 final _uiSchema = {
   "tags": {
     "ui:options": {"addButtonText": "Add tag", "removable": true},
@@ -46,6 +54,12 @@ class ArraySimpleExample extends StatefulWidget {
 
 class _ArraySimpleExampleState extends State<ArraySimpleExample> {
   String language = 'en';
+  JsonMap? formData;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +96,8 @@ class _ArraySimpleExampleState extends State<ArraySimpleExample> {
                 child: DjsfForm(
                   schema: _schema,
                   uiSchema: _uiSchema,
+                  formData: formData,
+                  onChanged: (data) => setState(() => formData = data),
                   locale: language,
                 ),
               ),

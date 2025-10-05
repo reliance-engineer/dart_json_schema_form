@@ -11,7 +11,7 @@ class DjsfTextAreaField extends ReactiveFormField<String, String> {
 
   DjsfTextAreaField({
     required this.ctx,
-    required super.formControlName,
+    required super.formControl,
     super.key,
     this.obscureText = false,
     this.keyboardType,

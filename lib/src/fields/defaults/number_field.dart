@@ -11,7 +11,7 @@ class DjsfNumberField<T extends num> extends ReactiveFormField<T, T> {
 
   DjsfNumberField({
     required this.ctx,
-    required super.formControlName,
+    required super.formControl,
     super.key,
     this.obscureText = false,
     this.keyboardType,

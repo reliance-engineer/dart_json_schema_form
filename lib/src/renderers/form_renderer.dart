@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dart_json_schema_form/dart_json_schema_form.dart';
 import 'package:dart_json_schema_form/src/containers/containers.dart';
 import 'package:dart_json_schema_form/src/fields/defaults.dart';
@@ -98,10 +96,15 @@ class FormRenderer extends StatelessWidget {
       }
 
       children.add(
-        _buildWithRegistry(
+        buildWithRegistry(
           name,
           propSchema,
           fields,
+          schema: schema,
+          control: form.control(name),
+          uiSchema: uiSchema,
+          messages: messages,
+          transformErrors: transformErrors,
         ),
       );
     }
@@ -111,22 +114,24 @@ class FormRenderer extends StatelessWidget {
     );
   }
 
-  Widget _buildWithRegistry(
+  static Widget buildWithRegistry(
     String name,
     JsonMap propSchema,
-    DjsfFieldRegistry registry,
-  ) {
+    DjsfFieldRegistry registry, {
+    required JsonMap schema,
+    required AbstractControl<dynamic> control,
+    JsonMap? uiSchema,
+    DjsfMessageBundle messages = const IntlBundle(),
+    TransformErrors? transformErrors,
+  }) {
     final type = (propSchema['type'] as String?) ?? 'string';
     final ui = uiSchema?[name] as JsonMap? ?? {};
     final modifier = (ui['ui:options'] as JsonMap?)?['inputType'] as String?;
     final widgetKey = modifier ?? (ui['ui:widget'] as String?) ?? type;
 
-    debugPrint("Building $name with type $type and widgetKey $widgetKey");
-    debugPrint("Building with uiSchema: ${jsonEncode(ui)}");
-
     final ctx = DjsfFieldContext(
       type: widgetKey,
-      form: form,
+      control: control,
       schema: schema,
       uiSchema: uiSchema,
       path: name,
