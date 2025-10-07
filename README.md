@@ -1,4 +1,4 @@
-# dart\\_json\\_schema\\_form
+# dart_json_schema_form
 
 [![codecov](https://codecov.io/gh/reliance-engineer/dart_json_schema_form/graph/badge.svg?token=1MT24L1VK3)](https://codecov.io/gh/reliance-engineer/dart_json_schema_form)
 [![Made with Flutter](https://img.shields.io/badge/Made%20with-Flutter_%3E%3D_3.24.2-blue?logo=flutter)](https://flutter.dev)
